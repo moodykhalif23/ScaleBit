@@ -1,6 +1,6 @@
-# sme-platform-istio Helm Chart
+# scalebit-istio Helm Chart
 
-This Helm chart deploys Istio service mesh configuration for the SME Platform microservices, including:
+This Helm chart deploys Istio service mesh configuration for the ScaleBit microservices, including:
 
 - Namespace with Istio sidecar injection
 - mTLS (mutual TLS) enforcement
@@ -12,7 +12,7 @@ This Helm chart deploys Istio service mesh configuration for the SME Platform mi
 2. **Deploy the chart:**
 
 ```sh
-helm install sme-platform-istio ./ --namespace sme-platform --create-namespace
+helm install scalebit-istio ./ --namespace scalebit --create-namespace
 ```
 
 3. **Customize canary weights:**
@@ -30,7 +30,7 @@ services:
 Change the `canaryWeight` and run:
 
 ```sh
-helm upgrade sme-platform-istio ./ --namespace sme-platform
+helm upgrade scalebit-istio ./ --namespace scalebit
 ```
 
 ## Files

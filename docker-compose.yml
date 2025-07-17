@@ -4,7 +4,7 @@ services:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: sme_platform
+      MYSQL_DATABASE: scalebit_platform
     ports:
       - "3306:3306"
     volumes:
@@ -14,7 +14,7 @@ services:
   user-service:
     build: ./internal/pkg/services/users
     environment:
-      DATABASE_DSN: root:password@tcp(mysql:3306)/sme_platform?parseTime=true
+      DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
       JWT_SECRET: your_jwt_secret
     depends_on:
       - mysql
@@ -24,7 +24,7 @@ services:
   product-service:
     build: ./internal/pkg/services/product
     environment:
-      DATABASE_DSN: root:password@tcp(mysql:3306)/sme_platform?parseTime=true
+      DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
     depends_on:
       - mysql
     ports:
@@ -33,7 +33,7 @@ services:
   order-service:
     build: ./internal/pkg/services/order
     environment:
-      DATABASE_DSN: root:password@tcp(mysql:3306)/sme_platform?parseTime=true
+      DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
     depends_on:
       - mysql
     ports:
@@ -42,7 +42,7 @@ services:
   payment-service:
     build: ./internal/pkg/services/payment
     environment:
-      DATABASE_DSN: root:password@tcp(mysql:3306)/sme_platform?parseTime=true
+      DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
     depends_on:
       - mysql
     ports:

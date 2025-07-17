@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: product-service
-  namespace: sme-platform
+  namespace: scalebit
 spec:
   host: product-service
   subsets:

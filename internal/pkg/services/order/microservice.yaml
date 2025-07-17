@@ -1,4 +1,4 @@
-apiVersion: sme.moodykhalif23.github.com/v1alpha1
+apiVersion: scalebit.moodykhalif23.github.com/v1alpha1
 kind: Microservice
 metadata:
   name: order-service

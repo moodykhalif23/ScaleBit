@@ -12,8 +12,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "sme-cli",
-	Short: "SME Microservices Platform CLI",
+	Use:   "scalebit-cli",
+	Short: "ScaleBit Microservices Platform CLI",
 }
 
 var createServiceCmd = &cobra.Command{
@@ -41,7 +41,7 @@ var createServiceCmd = &cobra.Command{
 		ioutil.WriteFile(filepath.Join(outputDir, "Dockerfile"), []byte(dockerStr), 0644)
 
 		// Generate microservice.yaml CRD manifest
-		crd := `apiVersion: sme.moodykhalif23.github.com/v1alpha1
+		crd := `apiVersion: scalebit.moodykhalif23.github.com/v1alpha1
 kind: Microservice
 metadata:
   name: ` + serviceName + `

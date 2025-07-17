@@ -26,7 +26,7 @@ function Header({ onLogout }) {
     <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-          SME Platform Dashboard
+          ScaleBit Dashboard
         </Typography>
         <Button color="inherit" onClick={onLogout}>Logout</Button>
       </Toolbar>

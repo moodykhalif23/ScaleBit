@@ -6,7 +6,7 @@ module "k3s_cluster" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 18.0"
 
-  cluster_name = "sme-platform"
+  cluster_name = "scalebit"
   vpc_id       = module.vpc.vpc_id
   subnets      = module.vpc.private_subnets
 

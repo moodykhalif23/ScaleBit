@@ -1,8 +1,8 @@
- # SME Platform: Scalable Microservices Platform for SMEs
+ # ScaleBit: Scalable Microservices Platform for SMEs
 
 ## Overview
 
-The SME Platform is a turnkey, production-ready microservices platform designed for small and medium enterprises. Built with Go, Kubernetes, and modern DevOps tooling, it enables rapid development, deployment, and scaling of business-critical services with minimal operational overhead.
+ScaleBit is a turnkey, production-ready microservices platform designed for small and medium enterprises. Built with Go, Kubernetes, and modern DevOps tooling, it enables rapid development, deployment, and scaling of business-critical services with minimal operational overhead.
 
 ## Architecture
 
@@ -106,10 +106,10 @@ This project is licensed under the MIT License.
 2. **Deploy the Helm chart**:
    ```sh
    cd deployments/helm
-   helm install sme-platform-istio ./ --namespace sme-platform --create-namespace
+   helm install scalebit-istio ./ --namespace scalebit --create-namespace
    ```
 3. **Adjust canary rollout** by editing `values.yaml` and running:
    ```sh
-   helm upgrade sme-platform-istio ./ --namespace sme-platform
+   helm upgrade scalebit-istio ./ --namespace scalebit
    ```
 

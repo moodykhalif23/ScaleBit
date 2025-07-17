@@ -1,5 +1,5 @@
 // +kubebuilder:object:generate=true
-// +groupName=sme.moodykhalif23.github.com
+// +groupName=scalebit.moodykhalif23.github.com
 package v1alpha1
 
 import (
@@ -8,7 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-var SchemeGroupVersion = schema.GroupVersion{Group: "sme.moodykhalif23.github.com", Version: "v1alpha1"}
+var SchemeGroupVersion = schema.GroupVersion{Group: "scalebit.moodykhalif23.github.com", Version: "v1alpha1"}
 
 func Kind(kind string) schema.GroupKind {
 	return SchemeGroupVersion.WithKind(kind).GroupKind()

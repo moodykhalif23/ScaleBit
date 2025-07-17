@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/moodykhalif23/sme-platform/internal/pkg/security"
-	"github.com/moodykhalif23/sme-platform/internal/pkg/telemetry"
+	"github.com/moodykhalif23/scalebit/internal/pkg/security"
+	"github.com/moodykhalif23/scalebit/internal/pkg/telemetry"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -88,7 +88,7 @@ func initTracer() *trace.TracerProvider {
 func setupDB() *sql.DB {
 	dsn := os.Getenv("DATABASE_DSN")
 	if dsn == "" {
-		dsn = "root:password@tcp(localhost:3306)/sme_platform?parseTime=true"
+		dsn = "root:password@tcp(localhost:3306)/scalebit_platform?parseTime=true"
 	}
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {

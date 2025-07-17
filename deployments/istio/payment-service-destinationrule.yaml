@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: payment-service
-  namespace: sme-platform
+  namespace: scalebit
 spec:
   host: payment-service
   subsets:

@@ -1,4 +1,4 @@
-namespace: sme-platform
+namespace: scalebit
 services:
   - name: user-service
     canaryWeight: 10

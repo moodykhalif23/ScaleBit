@@ -1,4 +1,4 @@
-module github.com/moodykhalif23/sme-platform
+module github.com/moodykhalif23/scalebit
 
 go 1.24.5
 

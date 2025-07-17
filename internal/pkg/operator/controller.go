@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/moodykhalif23/sme-platform/api/v1alpha1"
+	"github.com/moodykhalif23/scalebit/api/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
 	autoscalingv2 "k8s.io/api/autoscaling/v2"
 	corev1 "k8s.io/api/core/v1"
