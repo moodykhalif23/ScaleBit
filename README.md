@@ -1,115 +1,115 @@
- # ScaleBit: Scalable Microservices Platform for SMEs
+# ScaleBit: A Scalable Microservices Platform for SMEs
 
-## Overview
+## 1. Project Overview
 
-ScaleBit is a turnkey, production-ready microservices platform designed for small and medium enterprises. Built with Go, Kubernetes, and modern DevOps tooling, it enables rapid development, deployment, and scaling of business-critical services with minimal operational overhead.
+ScaleBit is a production-ready, open-source microservices platform designed to help small and medium enterprises (SMEs) accelerate the development, deployment, and scaling of their applications. It provides a robust foundation of core services, infrastructure automation, and modern DevOps practices, allowing teams to focus on building business value instead of managing infrastructure complexity.
 
-## Architecture
+This platform is built on a foundation of Go, Kubernetes, and other cloud-native technologies, offering a cost-effective and high-performance alternative to traditional monolithic architectures.
 
-- **Microservices**: User, Product, Order, and Payment services (Go, REST, OpenTelemetry, Prometheus)
-- **API Gateway**: KrakenD for routing, authentication, rate limiting, and CORS
-- **Service Discovery & Load Balancing**: Kubernetes DNS and a Go-based reverse proxy
-- **Monitoring**: Prometheus for metrics, ELK Stack (Elasticsearch, Logstash, Kibana) for logging
-- **Database**: MySQL (schema in `deployments/aws/main.sql`)
-- **Deployment**: Docker, Kubernetes manifests, and operator-based CRDs
+## 2. Architecture
 
-## Services
+The ScaleBit platform follows a distributed, microservices-based architecture. Key components include:
 
-- **User Service**: CRUD for users, JWT auth, metrics
-- **Product Service**: CRUD for products, metrics
-- **Order Service**: CRUD for orders, metrics
-- **Payment Service**: CRUD for payments, metrics
+- **Core Services**: A set of essential microservices for common business functions:
+  - **User Service**: Manages user authentication, authorization, and profiles.
+  - **Product Service**: Handles product catalog and inventory management.
+  - **Order Service**: Manages customer orders and orchestrates the fulfillment process.
+  - **Payment Service**: Integrates with payment gateways to handle transactions.
+- **API Gateway**: A central entry point for all client requests, managed by **KrakenD**. It handles routing, rate limiting, authentication, and CORS.
+- **Service Mesh**: **Istio** is used to manage traffic between services, enforce security policies (mTLS), and enable advanced deployment strategies like canary releases.
+- **Database**: **MySQL** is the primary database for all services. The schema is managed via a central SQL file.
+- **Observability**:
+  - **Monitoring**: **Prometheus** scrapes and stores metrics from all services.
+  - **Logging**: The **ELK Stack** (Elasticsearch, Logstash, Kibana) provides a centralized logging solution, with **Filebeat** shipping logs from each service.
+- **Deployment**: The platform is designed for deployment on **Kubernetes**. It uses Docker for containerization and a custom Go-based operator for managing `Microservice` Custom Resource Definitions (CRDs).
 
-Each service exposes RESTful endpoints and a `/metrics` endpoint for Prometheus.
+## 3. Getting Started
 
-## Getting Started
+Follow these steps to set up the platform for local development.
 
 ### Prerequisites
-- Go 1.22+
-- Docker
-- Kubernetes (minikube, k3s, or cloud provider)
-- MySQL database
 
-### Local Development
-1. **Clone the repository**
-2. **Build and run a service**:
+- Go (version 1.22 or later)
+- Docker
+- A local Kubernetes cluster (e.g., Minikube, k3s, Docker Desktop)
+- A running MySQL instance
+
+### Local Development Setup
+
+1. **Clone the Repository**:
+   ```sh
+   git clone https://github.com/moodykhalif23/scalebit.git
+   cd scalebit
+   ```
+
+2. **Apply Database Schema**:
+   Connect to your MySQL instance and apply the initial schema:
+   ```sh
+   mysql -u <username> -p <database_name> < deployments/aws/main.sql
+   ```
+
+3. **Configure Environment**:
+   Each microservice requires environment variables for database connections and other settings. You can create a `.env` file in each service's directory (e.g., `internal/pkg/services/users/.env`) or export them in your shell.
+
+4. **Run a Single Service**:
+   To build and run a specific service locally:
    ```sh
    cd internal/pkg/services/users
    go run main.go
    ```
-3. **Run all services with Docker Compose** (if provided) or build images manually:
+
+5. **Build and Run with Docker**:
+   Build Docker images for each service:
    ```sh
    docker build -t user-service:latest internal/pkg/services/users
    docker build -t product-service:latest internal/pkg/services/product
    docker build -t order-service:latest internal/pkg/services/order
    docker build -t payment-service:latest internal/pkg/services/payment
    ```
-4. **Apply the database schema**:
-   ```sh
-   mysql < deployments/aws/main.sql
-   ```
+   A `docker-compose.yml` file is provided for running all services together.
 
-### Kubernetes Deployment
-1. **Build and push Docker images to your registry**
-2. **Apply CRDs and manifests**:
-   ```sh
-   kubectl apply -f internal/pkg/services/users/microservice.yaml
-   kubectl apply -f internal/pkg/services/product/microservice.yaml
-   kubectl apply -f internal/pkg/services/order/microservice.yaml
-   kubectl apply -f internal/pkg/services/payment/microservice.yaml
-   kubectl apply -f deployments/aws/elasticsearch.yaml
-   kubectl apply -f deployments/aws/kibana.yaml
-   # Add other manifests as needed
-   ```
-3. **Deploy API Gateway**:
-   - Use the KrakenD config in `deployments/aws/krakend.json`
-   - Example Docker run:
-     ```sh
-     docker run -p 80:80 -v $(pwd)/deployments/aws/krakend.json:/etc/krakend/krakend.json devopsfaith/krakend
-     ```
+## 4. Deployment
 
-### Monitoring & Logging
-- **Prometheus**: Use `deployments/aws/prometheus.yaml` to scrape metrics from all services
-- **ELK Stack**:
-  - Filebeat: `deployments/aws/filebeat.yaml`
-  - Logstash: `deployments/aws/logstash.conf`
-  - Elasticsearch: `deployments/aws/elasticsearch.yaml`
-  - Kibana: `deployments/aws/kibana.yaml`
+The platform is designed to be deployed on Kubernetes.
 
-## API Gateway
-- **KrakenD** routes all API traffic and enforces JWT authentication, CORS, and rate limiting.
-- Update `krakend.json` as needed for your environment and secrets.
+### Kubernetes Deployment with Helm
 
-## Database
-- MySQL schema is provided in `deployments/aws/main.sql`.
-- Update connection strings in each service as needed.
+The recommended way to deploy the platform is by using the provided Helm chart, which leverages Istio for service mesh capabilities.
 
-## Contribution Guidelines
-- Fork the repository and create feature branches for changes
-- Write clear, professional commit messages
-- Ensure all code passes linting and tests
-- Submit pull requests for review
-- Follow the architecture and security best practices outlined in the documentation
+1. **Install Istio**:
+   Ensure Istio is installed in your Kubernetes cluster.
 
-## License
-This project is licensed under the MIT License.
-
-### What’s been generated:
-- **Istio Manifests** (`deployments/istio/`): mTLS, traffic splitting, and canary support for each service.
-- **Helm Chart** (`deployments/helm/`):
-  - Templated namespace, mTLS, DestinationRule, and VirtualService for all services.
-  - Configurable canary weights in `values.yaml`.
-  - Usage documentation in `README.md`.
-
-### How to use:
-1. **Install Istio** in your cluster.
-2. **Deploy the Helm chart**:
+2. **Deploy the Helm Chart**:
+   The Helm chart will create the necessary namespace, service meshes, and deployment configurations.
    ```sh
    cd deployments/helm
    helm install scalebit-istio ./ --namespace scalebit --create-namespace
    ```
-3. **Adjust canary rollout** by editing `values.yaml` and running:
+
+3. **Canary Deployments**:
+   You can perform a canary rollout by adjusting the traffic weights in `deployments/helm/values.yaml` and running a Helm upgrade:
    ```sh
    helm upgrade scalebit-istio ./ --namespace scalebit
    ```
 
+### API Gateway Configuration
+
+The **KrakenD** API Gateway is configured via `deployments/aws/krakend.json`. To run the gateway:
+```sh
+docker run -p 80:80 -v $(pwd)/deployments/aws/krakend.json:/etc/krakend/krakend.json devopsfaith/krakend
+```
+Ensure the service endpoints in the configuration file match your deployment environment.
+
+## 5. Contribution Guidelines
+
+We welcome contributions to the ScaleBit platform. To contribute, please follow these guidelines:
+
+- **Fork the repository** and create a new branch for your feature or bug fix.
+- **Follow the existing code style** and architectural patterns.
+- **Write clear and professional commit messages**.
+- **Ensure all tests pass** before submitting a pull request.
+- **Submit a pull request** for review.
+
+## 6. License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
