@@ -16,4 +16,19 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+function parseJwt(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+}
+
+export function getUserRoleFromToken() {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  const payload = parseJwt(token);
+  return payload && payload.role ? payload.role : null;
+}
+
 export default api; 

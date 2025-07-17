@@ -34,6 +34,7 @@ type User struct {
 	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
+	Role  string `json:"role"`
 }
 
 // Add Register and Login request structs
@@ -42,6 +43,7 @@ type RegisterRequest struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Role     string `json:"role,omitempty"`
 }
 
 type LoginRequest struct {
@@ -168,7 +170,7 @@ func authMiddleware(next http.Handler) http.Handler {
 // CRUD Handlers
 func getUsers(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		rows, err := db.Query("SELECT id, name, email FROM users")
+		rows, err := db.Query("SELECT id, name, email, role FROM users")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -177,7 +179,7 @@ func getUsers(db *sql.DB) http.HandlerFunc {
 		users := []User{}
 		for rows.Next() {
 			var u User
-			if err := rows.Scan(&u.ID, &u.Name, &u.Email); err != nil {
+			if err := rows.Scan(&u.ID, &u.Name, &u.Email, &u.Role); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -199,19 +201,23 @@ func createUser(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "All fields required", http.StatusBadRequest)
 			return
 		}
+		role := req.Role
+		if role == "" {
+			role = "user"
+		}
 		hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 		if err != nil {
 			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 			return
 		}
-		result, err := db.Exec("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)", req.Name, req.Email, string(hash))
+		result, err := db.Exec("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)", req.Name, req.Email, string(hash), role)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		id, _ := result.LastInsertId()
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "name": req.Name, "email": req.Email})
+		json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "name": req.Name, "email": req.Email, "role": role})
 	}
 }
 
@@ -220,7 +226,7 @@ func getUser(db *sql.DB) http.HandlerFunc {
 		vars := mux.Vars(r)
 		id := vars["id"]
 		var u User
-		err := db.QueryRow("SELECT id, name, email FROM users WHERE id = ?", id).Scan(&u.ID, &u.Name, &u.Email)
+		err := db.QueryRow("SELECT id, name, email, role FROM users WHERE id = ?", id).Scan(&u.ID, &u.Name, &u.Email, &u.Role)
 		if err == sql.ErrNoRows {
 			http.Error(w, "User not found", http.StatusNotFound)
 			return
@@ -241,7 +247,7 @@ func updateUser(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		_, err := db.Exec("UPDATE users SET name = ?, email = ? WHERE id = ?", u.Name, u.Email, id)
+		_, err := db.Exec("UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?", u.Name, u.Email, u.Role, id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -276,20 +282,23 @@ func registerHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "All fields required", http.StatusBadRequest)
 			return
 		}
-		// Hash password
+		role := req.Role
+		if role == "" {
+			role = "user"
+		}
 		hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 		if err != nil {
 			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 			return
 		}
-		result, err := db.Exec("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)", req.Name, req.Email, string(hash))
+		result, err := db.Exec("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)", req.Name, req.Email, string(hash), role)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		id, _ := result.LastInsertId()
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "name": req.Name, "email": req.Email})
+		json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "name": req.Name, "email": req.Email, "role": role})
 	}
 }
 
@@ -305,8 +314,8 @@ func loginHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		var id int
-		var name, email, passwordHash string
-		err := db.QueryRow("SELECT id, name, email, password_hash FROM users WHERE email = ?", req.Email).Scan(&id, &name, &email, &passwordHash)
+		var name, email, passwordHash, role string
+		err := db.QueryRow("SELECT id, name, email, password_hash, role FROM users WHERE email = ?", req.Email).Scan(&id, &name, &email, &passwordHash, &role)
 		if err == sql.ErrNoRows {
 			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 			return
@@ -328,6 +337,7 @@ func loginHandler(db *sql.DB) http.HandlerFunc {
 			"id":    id,
 			"name":  name,
 			"email": email,
+			"role":  role,
 			"exp":   time.Now().Add(24 * time.Hour).Unix(),
 		}
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims(claims))
@@ -336,6 +346,6 @@ func loginHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Failed to sign token", http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(map[string]string{"token": tokenString})
+		json.NewEncoder(w).Encode(map[string]string{"token": tokenString, "role": role})
 	}
 }

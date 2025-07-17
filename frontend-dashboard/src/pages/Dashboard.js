@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Box, AppBar, Toolbar, Typography, Button, Drawer, List, ListItem, ListItemText, Grid, Card, CardContent, CircularProgress } from '@mui/material';
 import api from '../api/axios';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const drawerWidth = 200;
 
 function Sidebar() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const items = [
+    { text: 'Dashboard', path: '/' },
+    { text: 'Users', path: '/users' },
+    { text: 'Products', path: '/products' },
+    { text: 'Orders', path: '/orders' },
+    { text: 'Payments', path: '/payments' },
+  ];
   return (
     <Drawer variant="permanent" sx={{ width: drawerWidth, flexShrink: 0, [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' } }}>
       <Toolbar />
       <Box sx={{ overflow: 'auto' }}>
         <List>
-          {['Dashboard', 'Users', 'Products', 'Orders', 'Payments'].map((text) => (
-            <ListItem button key={text}>
+          {items.map(({ text, path }) => (
+            <ListItem button key={text} selected={location.pathname === path} onClick={() => navigate(path)}>
               <ListItemText primary={text} />
             </ListItem>
           ))}
