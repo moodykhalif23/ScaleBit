@@ -1,0 +1,10 @@
+namespace: sme-platform
+services:
+  - name: user-service
+    canaryWeight: 10
+  - name: product-service
+    canaryWeight: 10
+  - name: order-service
+    canaryWeight: 10
+  - name: payment-service
+    canaryWeight: 10 

@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: sme_platform
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./deployments/aws/main.sql:/docker-entrypoint-initdb.d/main.sql
+
+  user-service:
+    build: ./internal/pkg/services/users
+    environment:
+      DATABASE_DSN: root:password@tcp(mysql:3306)/sme_platform?parseTime=true
+      JWT_SECRET: your_jwt_secret
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+
+  product-service:
+    build: ./internal/pkg/services/product
+    environment:
+      DATABASE_DSN: root:password@tcp(mysql:3306)/sme_platform?parseTime=true
+    depends_on:
+      - mysql
+    ports:
+      - "8081:8081"
+
+  order-service:
+    build: ./internal/pkg/services/order
+    environment:
+      DATABASE_DSN: root:password@tcp(mysql:3306)/sme_platform?parseTime=true
+    depends_on:
+      - mysql
+    ports:
+      - "8082:8082"
+
+  payment-service:
+    build: ./internal/pkg/services/payment
+    environment:
+      DATABASE_DSN: root:password@tcp(mysql:3306)/sme_platform?parseTime=true
+    depends_on:
+      - mysql
+    ports:
+      - "8083:8083"
+
+  krakend:
+    image: devopsfaith/krakend:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./deployments/aws/krakend.json:/etc/krakend/krakend.json
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+      - payment-service
+
+volumes:
+  db_data: 

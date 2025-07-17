@@ -14,10 +14,14 @@ import (
 	"encoding/json"
 	"strconv"
 
+	"golang.org/x/crypto/bcrypt"
+
 	_ "github.com/go-sql-driver/mysql"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/sdk/trace"
+
+	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/gorilla/mux"
 	"github.com/moodykhalif23/sme-platform/internal/pkg/security"
@@ -30,6 +34,19 @@ type User struct {
 	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
+}
+
+// Add Register and Login request structs
+
+type RegisterRequest struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func main() {
@@ -63,6 +80,10 @@ func main() {
 	userRouter.HandleFunc("/{id:[0-9]+}", getUser(db)).Methods("GET")
 	userRouter.HandleFunc("/{id:[0-9]+}", updateUser(db)).Methods("PUT")
 	userRouter.HandleFunc("/{id:[0-9]+}", deleteUser(db)).Methods("DELETE")
+
+	// Add /register and /login handlers
+	r.HandleFunc("/register", registerHandler(db)).Methods("POST")
+	r.HandleFunc("/login", loginHandler(db)).Methods("POST")
 
 	// Secure endpoints with JWT and metrics middleware
 	handler := telemetry.Middleware(security.JWTValidationMiddleware(r))
@@ -166,21 +187,31 @@ func getUsers(db *sql.DB) http.HandlerFunc {
 	}
 }
 
+// Update createUser to require password and hash it
 func createUser(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var u User
-		if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		var req RegisterRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		result, err := db.Exec("INSERT INTO users (name, email) VALUES (?, ?)", u.Name, u.Email)
+		if req.Name == "" || req.Email == "" || req.Password == "" {
+			http.Error(w, "All fields required", http.StatusBadRequest)
+			return
+		}
+		hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+		if err != nil {
+			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
+			return
+		}
+		result, err := db.Exec("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)", req.Name, req.Email, string(hash))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		id, _ := result.LastInsertId()
-		u.ID = int(id)
-		json.NewEncoder(w).Encode(u)
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "name": req.Name, "email": req.Email})
 	}
 }
 
@@ -230,5 +261,81 @@ func deleteUser(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+// Add /register and /login handlers
+func registerHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req RegisterRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		if req.Name == "" || req.Email == "" || req.Password == "" {
+			http.Error(w, "All fields required", http.StatusBadRequest)
+			return
+		}
+		// Hash password
+		hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+		if err != nil {
+			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
+			return
+		}
+		result, err := db.Exec("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)", req.Name, req.Email, string(hash))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		id, _ := result.LastInsertId()
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "name": req.Name, "email": req.Email})
+	}
+}
+
+func loginHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req LoginRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		if req.Email == "" || req.Password == "" {
+			http.Error(w, "Email and password required", http.StatusBadRequest)
+			return
+		}
+		var id int
+		var name, email, passwordHash string
+		err := db.QueryRow("SELECT id, name, email, password_hash FROM users WHERE email = ?", req.Email).Scan(&id, &name, &email, &passwordHash)
+		if err == sql.ErrNoRows {
+			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+			return
+		} else if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(req.Password)); err != nil {
+			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+			return
+		}
+		// Create JWT
+		jwtSecret := os.Getenv("JWT_SECRET")
+		if jwtSecret == "" {
+			http.Error(w, "JWT secret not set", http.StatusInternalServerError)
+			return
+		}
+		claims := map[string]interface{}{
+			"id":    id,
+			"name":  name,
+			"email": email,
+			"exp":   time.Now().Add(24 * time.Hour).Unix(),
+		}
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims(claims))
+		tokenString, err := token.SignedString([]byte(jwtSecret))
+		if err != nil {
+			http.Error(w, "Failed to sign token", http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(map[string]string{"token": tokenString})
 	}
 }

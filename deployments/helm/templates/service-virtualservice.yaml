@@ -1,0 +1,21 @@
+{{- range .Values.services }}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Values.namespace }}
+spec:
+  hosts:
+    - {{ .name }}
+  http:
+    - route:
+        - destination:
+            host: {{ .name }}
+            subset: v1
+          weight: {{ sub 100 .canaryWeight }}
+        - destination:
+            host: {{ .name }}
+            subset: v2
+          weight: {{ .canaryWeight }}
+---
+{{- end }} 

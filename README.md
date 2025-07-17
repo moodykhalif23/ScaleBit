@@ -1,4 +1,4 @@
-# SME Platform: Scalable Microservices Platform for SMEs
+ # SME Platform: Scalable Microservices Platform for SMEs
 
 ## Overview
 
@@ -93,3 +93,23 @@ Each service exposes RESTful endpoints and a `/metrics` endpoint for Prometheus.
 
 ## License
 This project is licensed under the MIT License.
+
+### What’s been generated:
+- **Istio Manifests** (`deployments/istio/`): mTLS, traffic splitting, and canary support for each service.
+- **Helm Chart** (`deployments/helm/`):
+  - Templated namespace, mTLS, DestinationRule, and VirtualService for all services.
+  - Configurable canary weights in `values.yaml`.
+  - Usage documentation in `README.md`.
+
+### How to use:
+1. **Install Istio** in your cluster.
+2. **Deploy the Helm chart**:
+   ```sh
+   cd deployments/helm
+   helm install sme-platform-istio ./ --namespace sme-platform --create-namespace
+   ```
+3. **Adjust canary rollout** by editing `values.yaml` and running:
+   ```sh
+   helm upgrade sme-platform-istio ./ --namespace sme-platform
+   ```
+

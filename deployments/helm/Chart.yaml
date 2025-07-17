@@ -1,0 +1,4 @@
+apiVersion: v2
+name: sme-platform-istio
+version: 0.1.0
+description: Helm chart for Istio service mesh configuration (mTLS, traffic splitting, canary) for SME Platform microservices 
