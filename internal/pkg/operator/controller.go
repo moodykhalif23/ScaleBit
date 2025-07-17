@@ -2,9 +2,11 @@ package operator
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/moodykhalif23/sme-platform/api/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
+	autoscalingv2 "k8s.io/api/autoscaling/v2"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -24,6 +26,8 @@ type MicroserviceReconciler struct {
 
 // Ensure MicroserviceReconciler implements reconcile.Reconciler
 var _ reconcile.Reconciler = &MicroserviceReconciler{}
+
+func pointerToInt32(i int32) *int32 { return &i }
 
 func (r *MicroserviceReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
 	logger := log.FromContext(ctx)
@@ -52,6 +56,11 @@ func (r *MicroserviceReconciler) Reconcile(ctx context.Context, req reconcile.Re
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
 						"app": ms.Name,
+					},
+					Annotations: map[string]string{
+						"linkerd.io/inject":    "enabled",
+						"prometheus.io/scrape": "true",
+						"prometheus.io/port":   fmt.Sprintf("%d", ms.Spec.Port),
 					},
 				},
 				Spec: corev1.PodSpec{
@@ -102,6 +111,41 @@ func (r *MicroserviceReconciler) Reconcile(ctx context.Context, req reconcile.Re
 
 	if err := r.Client.Create(ctx, service); err != nil {
 		logger.Error(err, "Failed to create service")
+		return reconcile.Result{}, err
+	}
+
+	// Create or update HorizontalPodAutoscaler
+	hpa := &autoscalingv2.HorizontalPodAutoscaler{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      ms.Name + "-hpa",
+			Namespace: ms.Namespace,
+		},
+		Spec: autoscalingv2.HorizontalPodAutoscalerSpec{
+			ScaleTargetRef: autoscalingv2.CrossVersionObjectReference{
+				APIVersion: "apps/v1",
+				Kind:       "Deployment",
+				Name:       ms.Name,
+			},
+			MinReplicas: pointerToInt32(1),
+			MaxReplicas: 5,
+			Metrics: []autoscalingv2.MetricSpec{{
+				Type: autoscalingv2.ResourceMetricSourceType,
+				Resource: &autoscalingv2.ResourceMetricSource{
+					Name: corev1.ResourceCPU,
+					Target: autoscalingv2.MetricTarget{
+						Type:               autoscalingv2.UtilizationMetricType,
+						AverageUtilization: pointerToInt32(50),
+					},
+				},
+			}},
+		},
+	}
+	if err := controllerutil.SetControllerReference(&ms, hpa, r.Scheme); err != nil {
+		logger.Error(err, "Failed to set controller reference for HPA")
+		return reconcile.Result{}, err
+	}
+	if err := r.Client.Create(ctx, hpa); err != nil {
+		logger.Error(err, "Failed to create HPA")
 		return reconcile.Result{}, err
 	}
 

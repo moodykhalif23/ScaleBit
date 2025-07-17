@@ -1,0 +1,162 @@
+{
+  "version": 2,
+  "port": 80,
+  "endpoints": [
+    {
+      "endpoint": "/users",
+      "method": "GET",
+      "backend": [
+        { "url_pattern": "/users", "host": ["http://user-service:8080"] }
+      ]
+    },
+    {
+      "endpoint": "/users",
+      "method": "POST",
+      "backend": [
+        { "url_pattern": "/users", "host": ["http://user-service:8080"] }
+      ]
+    },
+    {
+      "endpoint": "/users/{id}",
+      "method": "GET",
+      "backend": [
+        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"] }
+      ]
+    },
+    {
+      "endpoint": "/users/{id}",
+      "method": "PUT",
+      "backend": [
+        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"] }
+      ]
+    },
+    {
+      "endpoint": "/users/{id}",
+      "method": "DELETE",
+      "backend": [
+        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"] }
+      ]
+    },
+    {
+      "endpoint": "/products",
+      "method": "GET",
+      "backend": [
+        { "url_pattern": "/products", "host": ["http://product-service:8081"] }
+      ]
+    },
+    {
+      "endpoint": "/products",
+      "method": "POST",
+      "backend": [
+        { "url_pattern": "/products", "host": ["http://product-service:8081"] }
+      ]
+    },
+    {
+      "endpoint": "/products/{id}",
+      "method": "GET",
+      "backend": [
+        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"] }
+      ]
+    },
+    {
+      "endpoint": "/products/{id}",
+      "method": "PUT",
+      "backend": [
+        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"] }
+      ]
+    },
+    {
+      "endpoint": "/products/{id}",
+      "method": "DELETE",
+      "backend": [
+        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"] }
+      ]
+    },
+    {
+      "endpoint": "/orders",
+      "method": "GET",
+      "backend": [
+        { "url_pattern": "/orders", "host": ["http://order-service:8082"] }
+      ]
+    },
+    {
+      "endpoint": "/orders",
+      "method": "POST",
+      "backend": [
+        { "url_pattern": "/orders", "host": ["http://order-service:8082"] }
+      ]
+    },
+    {
+      "endpoint": "/orders/{id}",
+      "method": "GET",
+      "backend": [
+        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"] }
+      ]
+    },
+    {
+      "endpoint": "/orders/{id}",
+      "method": "PUT",
+      "backend": [
+        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"] }
+      ]
+    },
+    {
+      "endpoint": "/orders/{id}",
+      "method": "DELETE",
+      "backend": [
+        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"] }
+      ]
+    },
+    {
+      "endpoint": "/payments",
+      "method": "GET",
+      "backend": [
+        { "url_pattern": "/payments", "host": ["http://payment-service:8083"] }
+      ]
+    },
+    {
+      "endpoint": "/payments",
+      "method": "POST",
+      "backend": [
+        { "url_pattern": "/payments", "host": ["http://payment-service:8083"] }
+      ]
+    },
+    {
+      "endpoint": "/payments/{id}",
+      "method": "GET",
+      "backend": [
+        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"] }
+      ]
+    },
+    {
+      "endpoint": "/payments/{id}",
+      "method": "PUT",
+      "backend": [
+        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"] }
+      ]
+    },
+    {
+      "endpoint": "/payments/{id}",
+      "method": "DELETE",
+      "backend": [
+        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"] }
+      ]
+    }
+  ],
+  "extra_config": {
+    "github.com/devopsfaith/krakend-jwt": {
+      "keys": ["your_jwt_secret"]
+    },
+    "github.com/devopsfaith/krakend-cors": {
+      "allow_origins": ["*"],
+      "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      "allow_headers": ["Authorization", "Content-Type"],
+      "expose_headers": ["Content-Length"],
+      "max_age": "12h"
+    },
+    "github.com/devopsfaith/krakend-ratelimit/juju/router": {
+      "max_rate": 100,
+      "capacity": 200
+    }
+  }
+} 

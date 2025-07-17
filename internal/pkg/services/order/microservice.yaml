@@ -1,0 +1,8 @@
+apiVersion: sme.moodykhalif23.github.com/v1alpha1
+kind: Microservice
+metadata:
+  name: order-service
+spec:
+  image: order-service:latest
+  port: 8082
+  replicas: 1 

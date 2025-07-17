@@ -11,11 +11,26 @@ import (
 	"syscall"
 	"time"
 
+	"encoding/json"
+	"strconv"
+
 	_ "github.com/go-sql-driver/mysql"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/sdk/trace"
+
+	"github.com/gorilla/mux"
+	"github.com/moodykhalif23/sme-platform/internal/pkg/security"
+	"github.com/moodykhalif23/sme-platform/internal/pkg/telemetry"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
+
+// User model
+type User struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
 
 func main() {
 	// Initialize tracing
@@ -26,12 +41,35 @@ func main() {
 	db := setupDB()
 	defer db.Close()
 
-	// HTTP server with graceful shutdown
+	// Prometheus metrics
+	meter := otel.GetMeterProvider().Meter("user-service")
+	telemetry.InitMetrics(meter)
+
+	r := mux.NewRouter()
+
+	// Health endpoint
+	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("ok"))
+	}).Methods("GET")
+
+	// Prometheus metrics endpoint
+	r.Handle("/metrics", promhttp.Handler())
+
+	// User CRUD endpoints
+	userRouter := r.PathPrefix("/users").Subrouter()
+	userRouter.HandleFunc("", getUsers(db)).Methods("GET")
+	userRouter.HandleFunc("", createUser(db)).Methods("POST")
+	userRouter.HandleFunc("/{id:[0-9]+}", getUser(db)).Methods("GET")
+	userRouter.HandleFunc("/{id:[0-9]+}", updateUser(db)).Methods("PUT")
+	userRouter.HandleFunc("/{id:[0-9]+}", deleteUser(db)).Methods("DELETE")
+
+	// Secure endpoints with JWT and metrics middleware
+	handler := telemetry.Middleware(security.JWTValidationMiddleware(r))
+
 	srv := &http.Server{
-		Addr: ":8080",
-		Handler: authMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Handle routes
-		})),
+		Addr:    ":8080",
+		Handler: handler,
 	}
 
 	go func() {
@@ -104,4 +142,93 @@ func authMiddleware(next http.Handler) http.Handler {
 		// Call the next handler
 		next.ServeHTTP(w, r)
 	})
+}
+
+// CRUD Handlers
+func getUsers(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		rows, err := db.Query("SELECT id, name, email FROM users")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer rows.Close()
+		users := []User{}
+		for rows.Next() {
+			var u User
+			if err := rows.Scan(&u.ID, &u.Name, &u.Email); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			users = append(users, u)
+		}
+		json.NewEncoder(w).Encode(users)
+	}
+}
+
+func createUser(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var u User
+		if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		result, err := db.Exec("INSERT INTO users (name, email) VALUES (?, ?)", u.Name, u.Email)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		id, _ := result.LastInsertId()
+		u.ID = int(id)
+		json.NewEncoder(w).Encode(u)
+	}
+}
+
+func getUser(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+		var u User
+		err := db.QueryRow("SELECT id, name, email FROM users WHERE id = ?", id).Scan(&u.ID, &u.Name, &u.Email)
+		if err == sql.ErrNoRows {
+			http.Error(w, "User not found", http.StatusNotFound)
+			return
+		} else if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(u)
+	}
+}
+
+func updateUser(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+		var u User
+		if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		_, err := db.Exec("UPDATE users SET name = ?, email = ? WHERE id = ?", u.Name, u.Email, id)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		u.ID, _ = strconv.Atoi(id)
+		json.NewEncoder(w).Encode(u)
+	}
+}
+
+func deleteUser(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+		_, err := db.Exec("DELETE FROM users WHERE id = ?", id)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}
 }

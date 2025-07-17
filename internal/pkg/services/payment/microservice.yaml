@@ -1,0 +1,8 @@
+apiVersion: sme.moodykhalif23.github.com/v1alpha1
+kind: Microservice
+metadata:
+  name: payment-service
+spec:
+  image: payment-service:latest
+  port: 8083
+  replicas: 1 
