@@ -17,7 +17,6 @@ The ScaleBit platform follows a distributed, microservices-based architecture. K
   - **Payment Service**: Integrates with payment gateways to handle transactions.
 - **API Gateway**: A central entry point for all client requests, managed by **KrakenD**. It handles routing, rate limiting, authentication, and CORS.
 - **Service Mesh**: **Istio** is used to manage traffic between services, enforce security policies (mTLS), and enable advanced deployment strategies like canary releases.
-- **Database**: **MySQL** is the primary database for all services. The schema is managed via a central SQL file.
 - **Observability**:
   - **Monitoring**: **Prometheus** scrapes and stores metrics from all services.
   - **Logging**: The **ELK Stack** (Elasticsearch, Logstash, Kibana) provides a centralized logging solution, with **Filebeat** shipping logs from each service.
@@ -35,18 +34,6 @@ Follow these steps to set up the platform for local development.
 - A running MySQL instance
 
 ### Local Development Setup
-
-1. **Clone the Repository**:
-   ```sh
-   git clone https://github.com/moodykhalif23/scalebit.git
-   cd scalebit
-   ```
-
-2. **Apply Database Schema**:
-   Connect to your MySQL instance and apply the initial schema:
-   ```sh
-   mysql -u <username> -p <database_name> < deployments/aws/main.sql
-   ```
 
 3. **Configure Environment**:
    Each microservice requires environment variables for database connections and other settings. You can create a `.env` file in each service's directory (e.g., `internal/pkg/services/users/.env`) or export them in your shell.
