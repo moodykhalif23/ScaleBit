@@ -1,9 +1,10 @@
 # Build stage
 FROM golang:1.24.5 AS builder
 WORKDIR /app
-COPY . .
 COPY go.mod go.sum ./
 RUN go mod download
+COPY internal/pkg/services/product/ ./product/
+WORKDIR /app/product
 RUN go build -o product-service main.go
 
 # Run stage
