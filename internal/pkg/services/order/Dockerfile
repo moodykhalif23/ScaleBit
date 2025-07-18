@@ -9,7 +9,7 @@ WORKDIR /app/order
 RUN go build -o order-service main.go
 
 # Run stage
-FROM gcr.io/distroless/base-debian11
+FROM debian:bullseye-slim
 WORKDIR /app
 COPY --from=builder /app/order/order-service .
 EXPOSE 8082

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "port": 80,
   "endpoints": [
     {

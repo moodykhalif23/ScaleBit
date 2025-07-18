@@ -9,7 +9,7 @@ WORKDIR /app/payment
 RUN go build -o payment-service main.go
 
 # Run stage
-FROM gcr.io/distroless/base-debian11
+FROM debian:bullseye-slim
 WORKDIR /app
 COPY --from=builder /app/payment/payment-service .
 EXPOSE 8083

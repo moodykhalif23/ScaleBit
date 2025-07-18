@@ -57,7 +57,7 @@ services:
       - "8083:8083"
 
   krakend:
-    image: devopsfaith/krakend:latest
+    image: krakend:latest
     ports:
       - "80:80"
     volumes:
