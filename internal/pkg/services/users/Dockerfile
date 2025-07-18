@@ -3,6 +3,7 @@ FROM golang:1.24.5 AS builder
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
+COPY internal/ ./internal/
 COPY internal/pkg/services/users/ ./users/
 WORKDIR /app/users
 RUN go build -o user-service main.go
