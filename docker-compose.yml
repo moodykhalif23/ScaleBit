@@ -12,7 +12,9 @@ services:
       - ./deployments/aws/main.sql:/docker-entrypoint-initdb.d/main.sql
 
   user-service:
-    build: ./internal/pkg/services/users
+    build:
+      context: .
+      dockerfile: internal/pkg/services/users/Dockerfile
     environment:
       DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
       JWT_SECRET: your_jwt_secret
@@ -22,7 +24,9 @@ services:
       - "8080:8080"
 
   product-service:
-    build: ./internal/pkg/services/product
+    build:
+      context: .
+      dockerfile: internal/pkg/services/product/Dockerfile
     environment:
       DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
     depends_on:
@@ -31,7 +35,9 @@ services:
       - "8081:8081"
 
   order-service:
-    build: ./internal/pkg/services/order
+    build:
+      context: .
+      dockerfile: internal/pkg/services/order/Dockerfile
     environment:
       DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
     depends_on:
@@ -40,7 +46,9 @@ services:
       - "8082:8082"
 
   payment-service:
-    build: ./internal/pkg/services/payment
+    build:
+      context: .
+      dockerfile: internal/pkg/services/payment/Dockerfile
     environment:
       DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
     depends_on:
