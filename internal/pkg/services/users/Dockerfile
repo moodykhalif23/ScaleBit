@@ -6,7 +6,7 @@ RUN go mod download
 COPY internal/ ./internal/
 COPY internal/pkg/services/users/ ./users/
 WORKDIR /app/users
-RUN go build -o user-service main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o user-service main.go
 
 # Run stage
 FROM debian:bullseye-slim
