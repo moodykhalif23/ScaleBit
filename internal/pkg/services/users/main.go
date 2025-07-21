@@ -51,6 +51,19 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	// Initialize tracing
 	tp := initTracer()
@@ -84,11 +97,13 @@ func main() {
 	userRouter.HandleFunc("/{id:[0-9]+}", deleteUser(db)).Methods("DELETE")
 
 	// Add /register and /login handlers
-	r.HandleFunc("/register", registerHandler(db)).Methods("POST")
-	r.HandleFunc("/login", loginHandler(db)).Methods("POST")
+	r.HandleFunc("/register", registerHandler(db)).Methods("POST", "OPTIONS")
+	r.HandleFunc("/login", loginHandler(db)).Methods("POST", "OPTIONS")
 
 	// Secure endpoints with JWT and metrics middleware
 	handler := telemetry.Middleware(security.JWTValidationMiddleware(r))
+	// Add CORS middleware outermost
+	handler = corsMiddleware(handler)
 
 	srv := &http.Server{
 		Addr:    ":8080",
