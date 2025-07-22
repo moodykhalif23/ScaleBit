@@ -8,6 +8,7 @@ import Products from './pages/Products';
 import Orders from './pages/Orders';
 import Payments from './pages/Payments';
 import { getUserRoleFromToken } from './api/axios';
+import Layout from './pages/Layout';
 
 export const RoleContext = React.createContext(null);
 
@@ -24,11 +25,13 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
-          <Route path="/products" element={<PrivateRoute><Products /></PrivateRoute>} />
-          <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
-          <Route path="/payments" element={<PrivateRoute><Payments /></PrivateRoute>} />
-          <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/payments" element={<Payments />} />
+          </Route>
         </Routes>
       </Router>
     </RoleContext.Provider>

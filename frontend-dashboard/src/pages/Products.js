@@ -116,7 +116,7 @@ export default function Products() {
   );
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography variant="h4" gutterBottom>Products</Typography>
       <MuiTextField
         placeholder="Search by name"
