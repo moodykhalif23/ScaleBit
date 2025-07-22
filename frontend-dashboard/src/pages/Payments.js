@@ -113,16 +113,14 @@ export default function Payments() {
   ];
 
   const filteredPayments = payments.filter(p =>
-    p.order_id.toString().includes(search) ||
-    p.status.toLowerCase().includes(search.toLowerCase()) ||
-    (p.timestamp && p.timestamp.toLowerCase().includes(search.toLowerCase()))
+    p.id.toString().includes(search.toLowerCase())
   );
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography variant="h4" gutterBottom>Payments</Typography>
       <MuiTextField
-        placeholder="Search by order ID, status, or timestamp"
+        placeholder="Search by ID"
         value={search}
         onChange={e => setSearch(e.target.value)}
         InputProps={{

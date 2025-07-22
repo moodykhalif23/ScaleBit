@@ -130,7 +130,7 @@ export default function Users() {
   );
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography variant="h4" gutterBottom>Users</Typography>
       <MuiTextField
         placeholder="Search by name or email"

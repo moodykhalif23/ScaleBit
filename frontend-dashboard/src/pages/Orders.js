@@ -113,16 +113,14 @@ export default function Orders() {
   ];
 
   const filteredOrders = orders.filter(o =>
-    o.user_id.toString().includes(search) ||
-    o.product_id.toString().includes(search) ||
-    o.status.toLowerCase().includes(search.toLowerCase())
+    o.id.toString().includes(search.toLowerCase())
   );
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography variant="h4" gutterBottom>Orders</Typography>
       <MuiTextField
-        placeholder="Search by user ID, product ID, or status"
+        placeholder="Search by ID"
         value={search}
         onChange={e => setSearch(e.target.value)}
         InputProps={{
