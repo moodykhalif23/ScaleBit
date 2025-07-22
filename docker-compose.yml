@@ -10,6 +10,11 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./deployments/aws/main.sql:/docker-entrypoint-initdb.d/main.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   user-service:
     build:
@@ -19,7 +24,8 @@ services:
       DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
       JWT_SECRET: your_jwt_secret
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - "8080:8080"
 
@@ -30,7 +36,8 @@ services:
     environment:
       DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - "8081:8081"
 
@@ -41,7 +48,8 @@ services:
     environment:
       DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - "8082:8082"
 
@@ -52,7 +60,8 @@ services:
     environment:
       DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - "8083:8083"
 
