@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
@@ -96,13 +95,22 @@ func main() {
 	userRouter.HandleFunc("/{id:[0-9]+}", updateUser(db)).Methods("PUT")
 	userRouter.HandleFunc("/{id:[0-9]+}", deleteUser(db)).Methods("DELETE")
 
-	// Add /register and /login handlers
-	r.HandleFunc("/register", registerHandler(db)).Methods("POST", "OPTIONS")
-	r.HandleFunc("/login", loginHandler(db)).Methods("POST", "OPTIONS")
+	// Create a new router for public routes (no JWT required)
+	publicRouter := r.PathPrefix("/").Subrouter()
+	
+	// Register public routes
+	publicRouter.HandleFunc("/register", registerHandler(db)).Methods("POST", "OPTIONS")
+	publicRouter.HandleFunc("/login", loginHandler(db)).Methods("POST", "OPTIONS")
 
-	// Secure endpoints with JWT and metrics middleware
+	// Apply CORS middleware to the public router
+	publicHandler := corsMiddleware(publicRouter)
+
+	// Mount the public router
+	r.PathPrefix("/").Handler(publicHandler)
+
+	// Secure other endpoints with JWT and metrics middleware
 	handler := telemetry.Middleware(security.JWTValidationMiddleware(r))
-	// Add CORS middleware outermost
+	// Add CORS middleware for protected routes
 	handler = corsMiddleware(handler)
 
 	srv := &http.Server{
@@ -152,34 +160,6 @@ func setupDB() *sql.DB {
 	}
 
 	return db
-}
-
-func authMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Get the Authorization header
-		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			http.Error(w, "Authorization header required", http.StatusUnauthorized)
-			return
-		}
-
-		// Check if it's a Bearer token
-		parts := strings.Split(authHeader, " ")
-		if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
-			http.Error(w, "Invalid authorization format", http.StatusUnauthorized)
-			return
-		}
-
-		token := parts[1]
-		// TODO: Implement proper token validation
-		if token == "" {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
-			return
-		}
-
-		// Call the next handler
-		next.ServeHTTP(w, r)
-	})
 }
 
 // CRUD Handlers
