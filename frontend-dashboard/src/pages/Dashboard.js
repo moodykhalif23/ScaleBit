@@ -46,10 +46,10 @@ export default function Dashboard() {
     <Box>
       <Typography variant="h4" gutterBottom>Overview</Typography>
       <Grid container spacing={2}>
-        <Grid item><StatCard title="Users" count={stats.users} loading={loading} /></Grid>
-        <Grid item><StatCard title="Products" count={stats.products} loading={loading} /></Grid>
-        <Grid item><StatCard title="Orders" count={stats.orders} loading={loading} /></Grid>
-        <Grid item><StatCard title="Payments" count={stats.payments} loading={loading} /></Grid>
+        <Grid><StatCard title="Users" count={stats.users} loading={loading} /></Grid>
+        <Grid><StatCard title="Products" count={stats.products} loading={loading} /></Grid>
+        <Grid><StatCard title="Orders" count={stats.orders} loading={loading} /></Grid>
+        <Grid><StatCard title="Payments" count={stats.payments} loading={loading} /></Grid>
       </Grid>
     </Box>
   );
