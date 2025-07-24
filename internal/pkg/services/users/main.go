@@ -15,7 +15,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/sdk/trace"
@@ -143,19 +143,23 @@ func initTracer() *trace.TracerProvider {
 }
 
 func setupDB() *sql.DB {
-	// Replace these with your actual database credentials
 	dsn := os.Getenv("DATABASE_DSN")
 	if dsn == "" {
-		dsn = "root:password@tcp(localhost:3306)/scalebit_platform?parseTime=true"
+		dsn = "postgres://postgres:password@localhost:5432/scalebit_platform?sslmode=disable"
 	}
 
-	db, err := sql.Open("mysql", dsn)
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	// Test the connection
-	if err := db.Ping(); err != nil {
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(25)
+	db.SetConnMaxLifetime(5 * time.Minute)
+
+	// Verify the connection
+	err = db.Ping()
+	if err != nil {
 		log.Fatalf("Failed to ping database: %v", err)
 	}
 

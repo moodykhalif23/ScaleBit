@@ -1,17 +1,17 @@
-version: '3.8'
 services:
-  mysql:
-    image: mysql:8
+  postgres:
+    image: postgres:15
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: scalebit_platform
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: scalebit_platform
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/mysql
-      - ./deployments/aws/main.sql:/docker-entrypoint-initdb.d/main.sql
+      - postgres_data:/var/lib/postgresql/data
+      - ./deployments/aws/main.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -21,10 +21,10 @@ services:
       context: .
       dockerfile: internal/pkg/services/users/Dockerfile
     environment:
-      DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
+      DATABASE_DSN: postgres://postgres:password@postgres:5432/scalebit_platform?sslmode=disable
       JWT_SECRET: your_jwt_secret
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
     ports:
       - "8080:8080"
@@ -34,9 +34,9 @@ services:
       context: .
       dockerfile: internal/pkg/services/product/Dockerfile
     environment:
-      DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
+      DATABASE_DSN: postgres://postgres:password@postgres:5432/scalebit_platform?sslmode=disable
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
     ports:
       - "8081:8081"
@@ -46,9 +46,9 @@ services:
       context: .
       dockerfile: internal/pkg/services/order/Dockerfile
     environment:
-      DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
+      DATABASE_DSN: postgres://postgres:password@postgres:5432/scalebit_platform?sslmode=disable
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
     ports:
       - "8082:8082"
@@ -58,9 +58,9 @@ services:
       context: .
       dockerfile: internal/pkg/services/payment/Dockerfile
     environment:
-      DATABASE_DSN: root:password@tcp(mysql:3306)/scalebit_platform?parseTime=true
+      DATABASE_DSN: postgres://postgres:password@postgres:5432/scalebit_platform?sslmode=disable
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
     ports:
       - "8083:8083"
@@ -78,4 +78,4 @@ services:
       - payment-service
 
 volumes:
-  db_data: 
+  postgres_data:

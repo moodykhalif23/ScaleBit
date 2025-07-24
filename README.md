@@ -31,7 +31,7 @@ Follow these steps to set up the platform for local development.
 - Go (version 1.22 or later)
 - Docker
 - A local Kubernetes cluster (e.g., Minikube, k3s, Docker Desktop)
-- A running MySQL instance
+- A running PostgreSQL instance
 
 ### Local Development Setup
 
@@ -44,6 +44,8 @@ Follow these steps to set up the platform for local development.
    cd internal/pkg/services/users
    go run main.go
    ```
+   
+   **Note**: Ensure you have set up the PostgreSQL database and configured the connection string in the environment variables or `.env` file.
 
 5. **Build and Run with Docker**:
    Build Docker images for each service:
@@ -53,7 +55,11 @@ Follow these steps to set up the platform for local development.
    docker build -t order-service:latest internal/pkg/services/order
    docker build -t payment-service:latest internal/pkg/services/payment
    ```
-   A `docker-compose.yml` file is provided for running all services together.
+   A `docker-compose.yml` file is provided for running all services together with PostgreSQL. The default configuration uses PostgreSQL with the following credentials:
+   - Username: `postgres`
+   - Password: `password`
+   - Database: `scalebit_platform`
+   - Port: `5432`
 
 ## 4. Deployment
 
