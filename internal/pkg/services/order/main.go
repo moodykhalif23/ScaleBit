@@ -138,7 +138,7 @@ func createOrder(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		result, err := db.Exec("INSERT INTO orders (user_id, product_id, quantity, status) VALUES (?, ?, ?, ?)", o.UserID, o.ProductID, o.Quantity, o.Status)
+		result, err := db.Exec("INSERT INTO orders (user_id, product_id, quantity, status) VALUES ($1, $2, $3, $4)", o.UserID, o.ProductID, o.Quantity, o.Status)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

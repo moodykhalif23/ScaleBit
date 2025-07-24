@@ -209,7 +209,7 @@ func createUser(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 			return
 		}
-		result, err := db.Exec("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)", req.Name, req.Email, string(hash), role)
+		result, err := db.Exec("INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4)", req.Name, req.Email, string(hash), role)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -225,7 +225,7 @@ func getUser(db *sql.DB) http.HandlerFunc {
 		vars := mux.Vars(r)
 		id := vars["id"]
 		var u User
-		err := db.QueryRow("SELECT id, name, email, role FROM users WHERE id = ?", id).Scan(&u.ID, &u.Name, &u.Email, &u.Role)
+		err := db.QueryRow("SELECT id, name, email, role FROM users WHERE id = $1", id).Scan(&u.ID, &u.Name, &u.Email, &u.Role)
 		if err == sql.ErrNoRows {
 			http.Error(w, "User not found", http.StatusNotFound)
 			return
@@ -246,7 +246,7 @@ func updateUser(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		_, err := db.Exec("UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?", u.Name, u.Email, u.Role, id)
+		_, err := db.Exec("UPDATE users SET name = $1, email = $2, role = $3 WHERE id = $4", u.Name, u.Email, u.Role, id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -260,7 +260,7 @@ func deleteUser(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id := vars["id"]
-		_, err := db.Exec("DELETE FROM users WHERE id = ?", id)
+		_, err := db.Exec("DELETE FROM users WHERE id = $1", id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -290,7 +290,7 @@ func registerHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 			return
 		}
-		result, err := db.Exec("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)", req.Name, req.Email, string(hash), role)
+		result, err := db.Exec("INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4)", req.Name, req.Email, string(hash), role)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

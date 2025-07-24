@@ -137,7 +137,7 @@ func createProduct(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		result, err := db.Exec("INSERT INTO products (name, price, stock) VALUES (?, ?, ?)", p.Name, p.Price, p.Stock)
+		result, err := db.Exec("INSERT INTO products (name, price, stock) VALUES ($1, $2, $3)", p.Name, p.Price, p.Stock)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

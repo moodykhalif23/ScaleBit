@@ -138,7 +138,7 @@ func createPayment(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		result, err := db.Exec("INSERT INTO payments (order_id, amount, status, timestamp) VALUES (?, ?, ?, ?)", p.OrderID, p.Amount, p.Status, p.Timestamp)
+		result, err := db.Exec("INSERT INTO payments (order_id, amount, status, timestamp) VALUES ($1, $2, $3, $4)", p.OrderID, p.Amount, p.Status, p.Timestamp)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -154,7 +154,7 @@ func getPayment(db *sql.DB) http.HandlerFunc {
 		vars := mux.Vars(r)
 		id := vars["id"]
 		var p Payment
-		err := db.QueryRow("SELECT id, order_id, amount, status, timestamp FROM payments WHERE id = ?", id).Scan(&p.ID, &p.OrderID, &p.Amount, &p.Status, &p.Timestamp)
+		err := db.QueryRow("SELECT id, order_id, amount, status, timestamp FROM payments WHERE id = $1", id).Scan(&p.ID, &p.OrderID, &p.Amount, &p.Status, &p.Timestamp)
 		if err == sql.ErrNoRows {
 			http.Error(w, "Payment not found", http.StatusNotFound)
 			return
@@ -175,7 +175,7 @@ func updatePayment(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		_, err := db.Exec("UPDATE payments SET order_id = ?, amount = ?, status = ?, timestamp = ? WHERE id = ?", p.OrderID, p.Amount, p.Status, p.Timestamp, id)
+		_, err := db.Exec("UPDATE payments SET order_id = $1, amount = $2, status = $3, timestamp = $4 WHERE id = $5", p.OrderID, p.Amount, p.Status, p.Timestamp, id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -189,7 +189,7 @@ func deletePayment(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id := vars["id"]
-		_, err := db.Exec("DELETE FROM payments WHERE id = ?", id)
+		_, err := db.Exec("DELETE FROM payments WHERE id = $1", id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
