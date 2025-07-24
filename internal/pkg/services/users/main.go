@@ -76,42 +76,42 @@ func main() {
 	meter := otel.GetMeterProvider().Meter("user-service")
 	telemetry.InitMetrics(meter)
 
-	r := mux.NewRouter()
+	// Create a new router for public routes (no JWT required)
+	publicRouter := mux.NewRouter()
 
 	// Health endpoint
-	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	publicRouter.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
-	}).Methods("GET")
+	}).Methods("GET", "OPTIONS")
 
 	// Prometheus metrics endpoint
-	r.Handle("/metrics", promhttp.Handler())
+	publicRouter.Handle("/metrics", promhttp.Handler())
 
-	// User CRUD endpoints
-	userRouter := r.PathPrefix("/users").Subrouter()
+	// Register public auth routes
+	publicRouter.HandleFunc("/register", registerHandler(db)).Methods("POST", "OPTIONS")
+	publicRouter.HandleFunc("/login", loginHandler(db)).Methods("POST", "OPTIONS")
+
+	// Create a subrouter for protected routes
+	protectedRouter := publicRouter.PathPrefix("/").Subrouter()
+
+	// Apply JWT middleware to protected routes only
+	protectedRouter.Use(security.JWTValidationMiddleware)
+
+	// User CRUD endpoints (protected)
+	userRouter := protectedRouter.PathPrefix("/users").Subrouter()
 	userRouter.HandleFunc("", getUsers(db)).Methods("GET")
 	userRouter.HandleFunc("", createUser(db)).Methods("POST")
 	userRouter.HandleFunc("/{id:[0-9]+}", getUser(db)).Methods("GET")
 	userRouter.HandleFunc("/{id:[0-9]+}", updateUser(db)).Methods("PUT")
 	userRouter.HandleFunc("/{id:[0-9]+}", deleteUser(db)).Methods("DELETE")
 
-	// Create a new router for public routes (no JWT required)
-	publicRouter := r.PathPrefix("/").Subrouter()
-	
-	// Register public routes
-	publicRouter.HandleFunc("/register", registerHandler(db)).Methods("POST", "OPTIONS")
-	publicRouter.HandleFunc("/login", loginHandler(db)).Methods("POST", "OPTIONS")
+	// Apply CORS middleware to all routes
+	handler := corsMiddleware(publicRouter)
 
-	// Apply CORS middleware to the public router
-	publicHandler := corsMiddleware(publicRouter)
-
-	// Mount the public router
-	r.PathPrefix("/").Handler(publicHandler)
-
-	// Secure other endpoints with JWT and metrics middleware
-	handler := telemetry.Middleware(security.JWTValidationMiddleware(r))
-	// Add CORS middleware for protected routes
-	handler = corsMiddleware(handler)
+	// Apply telemetry middleware to all routes
+	handler = telemetry.Middleware(handler)
 
 	srv := &http.Server{
 		Addr:    ":8080",
@@ -312,17 +312,23 @@ func loginHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Email and password required", http.StatusBadRequest)
 			return
 		}
+		log.Printf("Login attempt for email: %s", req.Email)
 		var id int
 		var name, email, passwordHash, role string
-		err := db.QueryRow("SELECT id, name, email, password_hash, role FROM users WHERE email = ?", req.Email).Scan(&id, &name, &email, &passwordHash, &role)
+		err := db.QueryRow("SELECT id, name, email, password_hash, role FROM users WHERE email = $1", req.Email).Scan(&id, &name, &email, &passwordHash, &role)
 		if err == sql.ErrNoRows {
+			log.Printf("No user found with email: %s", req.Email)
 			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 			return
 		} else if err != nil {
+			log.Printf("Database error during login: %v", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		log.Printf("Found user: %s (ID: %d)", email, id)
+		log.Printf("Comparing password hash for user: %s", email)
 		if err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(req.Password)); err != nil {
+			log.Printf("Password comparison failed: %v", err)
 			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 			return
 		}
