@@ -6,140 +6,160 @@
       "endpoint": "/users",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/users", "host": ["http://user-service:8080"] }
+        { "url_pattern": "/users", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/users",
       "method": "POST",
       "backend": [
-        { "url_pattern": "/users", "host": ["http://user-service:8080"] }
+        { "url_pattern": "/users", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/users/{id}",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"] }
+        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/users/{id}",
       "method": "PUT",
       "backend": [
-        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"] }
+        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/users/{id}",
       "method": "DELETE",
       "backend": [
-        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"] }
+        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
+      ]
+    },
+    {
+      "endpoint": "/register",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/register",
+          "host": ["http://user-service:8080"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/login",
+      "method": "POST",
+      "backend": [
+        {
+          "url_pattern": "/login",
+          "host": ["http://user-service:8080"]
+        }
       ]
     },
     {
       "endpoint": "/products",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/products", "host": ["http://product-service:8081"] }
+        { "url_pattern": "/products", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/products",
       "method": "POST",
       "backend": [
-        { "url_pattern": "/products", "host": ["http://product-service:8081"] }
+        { "url_pattern": "/products", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/products/{id}",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"] }
+        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/products/{id}",
       "method": "PUT",
       "backend": [
-        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"] }
+        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/products/{id}",
       "method": "DELETE",
       "backend": [
-        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"] }
+        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/orders",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/orders", "host": ["http://order-service:8082"] }
+        { "url_pattern": "/orders", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/orders",
       "method": "POST",
       "backend": [
-        { "url_pattern": "/orders", "host": ["http://order-service:8082"] }
+        { "url_pattern": "/orders", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/orders/{id}",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"] }
+        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/orders/{id}",
       "method": "PUT",
       "backend": [
-        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"] }
+        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/orders/{id}",
       "method": "DELETE",
       "backend": [
-        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"] }
+        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/payments",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/payments", "host": ["http://payment-service:8083"] }
+        { "url_pattern": "/payments", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/payments",
       "method": "POST",
       "backend": [
-        { "url_pattern": "/payments", "host": ["http://payment-service:8083"] }
+        { "url_pattern": "/payments", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/payments/{id}",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"] }
+        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/payments/{id}",
       "method": "PUT",
       "backend": [
-        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"] }
+        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
       ]
     },
     {
       "endpoint": "/payments/{id}",
       "method": "DELETE",
       "backend": [
-        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"] }
+        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
       ]
     }
   ],
