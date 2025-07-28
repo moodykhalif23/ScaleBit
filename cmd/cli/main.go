@@ -23,7 +23,7 @@ var createServiceCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		lang, _ := cmd.Flags().GetString("lang")
 		serviceName := args[0]
-		port := "8080" // default port, could be a flag
+		port := "8080"
 		templateDir := filepath.Join("internal", "pkg", "cli", "templates", lang+"-service")
 		outputDir := serviceName
 		os.MkdirAll(outputDir, 0755)

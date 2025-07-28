@@ -2,15 +2,15 @@
 
 ## 1. Project Overview
 
-ScaleBit is a production-ready, open-source microservices platform designed to help small and medium enterprises (SMEs) accelerate the development, deployment, and scaling of their applications. It provides a robust foundation of core services, infrastructure automation, and modern DevOps practices, allowing teams to focus on building business value instead of managing infrastructure complexity.
+ScaleBit is an open-source microservices platform designed to help small and medium enterprises (SMEs) accelerate the development, deployment, and scaling of their applications. It provides a robust foundation of core services, infrastructure automation, and modern DevOps practices, allowing teams to focus on building business value instead of managing infrastructure complexity.
 
 This platform is built on a foundation of Go, Kubernetes, and other cloud-native technologies, offering a cost-effective and high-performance alternative to traditional monolithic architectures.
 
 ## 2. Architecture
 
-The ScaleBit platform follows a distributed, microservices-based architecture. Key components include:
+ScaleBit follows a distributed, microservices-based architecture. Key components include:
 
-- **Core Services**: A set of essential microservices for common business functions:
+- **Core Services**
   - **User Service**: Manages user authentication, authorization, and profiles.
   - **Product Service**: Handles product catalog and inventory management.
   - **Order Service**: Manages customer orders and orchestrates the fulfillment process.
@@ -67,7 +67,7 @@ The platform is designed to be deployed on Kubernetes.
 
 ### Kubernetes Deployment with Helm
 
-The recommended way to deploy the platform is by using the provided Helm chart, which leverages Istio for service mesh capabilities.
+The recommended way to deploy ScaleBit is by using the provided Helm chart, which leverages Istio for service mesh capabilities.
 
 1. **Install Istio**:
    Ensure Istio is installed in your Kubernetes cluster.
@@ -95,7 +95,7 @@ Ensure the service endpoints in the configuration file match your deployment env
 
 ## 5. Contribution Guidelines
 
-We welcome contributions to the ScaleBit platform. To contribute, please follow these guidelines:
+We welcome contributions to the ScaleBit. To contribute, please follow these guidelines:
 
 - **Fork the repository** and create a new branch for your feature or bug fix.
 - **Follow the existing code style** and architectural patterns.
