@@ -136,9 +136,9 @@ export default function Products() {
         <Button variant="contained" sx={{ mb: 2, ml: 0 }} onClick={() => handleOpen()}>Add Product</Button>
       ) : (
         <Tooltip title="Admin only">
-          <>
+          <span>
             <Button variant="contained" sx={{ mb: 2, ml: 0 }} disabled>Add Product</Button>
-          </>
+          </span>
         </Tooltip>
       )}
       {loading ? <CircularProgress /> : (
