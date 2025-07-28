@@ -99,10 +99,10 @@ export default function Orders() {
             </>
           ) : (
             <Tooltip title="Admin only">
-              <span>
+              <>
                 <IconButton disabled><Edit /></IconButton>
                 <IconButton disabled color="error"><Delete /></IconButton>
-              </span>
+              </>
             </Tooltip>
           )}
         </>
@@ -137,9 +137,9 @@ export default function Orders() {
         <Button variant="contained" sx={{ mb: 2, ml: 0 }} onClick={() => handleOpen()}>Add Order</Button>
       ) : (
         <Tooltip title="Admin only">
-          <span>
+          <>
             <Button variant="contained" sx={{ mb: 2, ml: 0 }} disabled>Add Order</Button>
-          </span>
+          </>
         </Tooltip>
       )}
       {loading ? <CircularProgress /> : (

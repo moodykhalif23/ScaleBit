@@ -35,6 +35,7 @@ services:
       dockerfile: internal/pkg/services/product/Dockerfile
     environment:
       DATABASE_DSN: postgres://postgres:password@postgres:5432/scalebit_platform?sslmode=disable
+      JWT_SECRET: your_jwt_secret
     depends_on:
       postgres:
         condition: service_healthy
@@ -47,6 +48,7 @@ services:
       dockerfile: internal/pkg/services/order/Dockerfile
     environment:
       DATABASE_DSN: postgres://postgres:password@postgres:5432/scalebit_platform?sslmode=disable
+      JWT_SECRET: your_jwt_secret
     depends_on:
       postgres:
         condition: service_healthy
@@ -59,6 +61,7 @@ services:
       dockerfile: internal/pkg/services/payment/Dockerfile
     environment:
       DATABASE_DSN: postgres://postgres:password@postgres:5432/scalebit_platform?sslmode=disable
+      JWT_SECRET: your_jwt_secret
     depends_on:
       postgres:
         condition: service_healthy

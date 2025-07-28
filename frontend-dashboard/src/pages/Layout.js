@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, AppBar, Toolbar, Typography, Button, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Button, Drawer, List, ListItem, ListItemText, ListItemButton } from '@mui/material';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 
 const drawerWidth = 200;
@@ -20,8 +20,10 @@ function Sidebar() {
       <Box sx={{ overflow: 'auto' }}>
         <List>
           {items.map(({ text, path }) => (
-            <ListItem button key={text} selected={location.pathname === path} onClick={() => navigate(path)}>
-              <ListItemText primary={text} />
+            <ListItem key={text} disablePadding>
+              <ListItemButton selected={location.pathname === path} onClick={() => navigate(path)}>
+                <ListItemText primary={text} />
+              </ListItemButton>
             </ListItem>
           ))}
         </List>

@@ -111,10 +111,10 @@ export default function Users() {
             </>
           ) : (
             <Tooltip title="Admin only">
-              <span>
+              <>
                 <IconButton disabled><Edit /></IconButton>
                 <IconButton disabled color="error"><Delete /></IconButton>
-              </span>
+              </>
             </Tooltip>
           )}
         </>
@@ -150,9 +150,9 @@ export default function Users() {
         <Button variant="contained" sx={{ mb: 2, ml: 0 }} onClick={() => handleOpen()}>Add User</Button>
       ) : (
         <Tooltip title="Admin only">
-          <span>
+          <>
             <Button variant="contained" sx={{ mb: 2, ml: 0 }} disabled>Add User</Button>
-          </span>
+          </>
         </Tooltip>
       )}
       {loading ? <CircularProgress /> : (
