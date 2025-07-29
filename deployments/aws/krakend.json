@@ -6,36 +6,111 @@
       "endpoint": "/users",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/users", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/users",
+          "host": [
+            "http://user-service:8080"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/users",
       "method": "POST",
       "backend": [
-        { "url_pattern": "/users", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/users",
+          "host": [
+            "http://user-service:8080"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/users/{id}",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/users/{id}",
+          "host": [
+            "http://user-service:8080"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/users/{id}",
       "method": "PUT",
       "backend": [
-        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/users/{id}",
+          "host": [
+            "http://user-service:8080"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/users/{id}",
       "method": "DELETE",
       "backend": [
-        { "url_pattern": "/users/{id}", "host": ["http://user-service:8080"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/users/{id}",
+          "host": [
+            "http://user-service:8080"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/register",
@@ -43,7 +118,9 @@
       "backend": [
         {
           "url_pattern": "/register",
-          "host": ["http://user-service:8080"]
+          "host": [
+            "http://user-service:8080"
+          ]
         }
       ]
     },
@@ -53,7 +130,9 @@
       "backend": [
         {
           "url_pattern": "/login",
-          "host": ["http://user-service:8080"]
+          "host": [
+            "http://user-service:8080"
+          ]
         }
       ]
     },
@@ -61,119 +140,361 @@
       "endpoint": "/products",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/products", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/products",
+          "host": [
+            "http://product-service:8081"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/products",
       "method": "POST",
       "backend": [
-        { "url_pattern": "/products", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/products",
+          "host": [
+            "http://product-service:8081"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/products/{id}",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/products/{id}",
+          "host": [
+            "http://product-service:8081"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/products/{id}",
       "method": "PUT",
       "backend": [
-        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/products/{id}",
+          "host": [
+            "http://product-service:8081"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/products/{id}",
       "method": "DELETE",
       "backend": [
-        { "url_pattern": "/products/{id}", "host": ["http://product-service:8081"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/products/{id}",
+          "host": [
+            "http://product-service:8081"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/orders",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/orders", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/orders",
+          "host": [
+            "http://order-service:8082"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/orders",
       "method": "POST",
       "backend": [
-        { "url_pattern": "/orders", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/orders",
+          "host": [
+            "http://order-service:8082"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/orders/{id}",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/orders/{id}",
+          "host": [
+            "http://order-service:8082"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/orders/{id}",
       "method": "PUT",
       "backend": [
-        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/orders/{id}",
+          "host": [
+            "http://order-service:8082"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/orders/{id}",
       "method": "DELETE",
       "backend": [
-        { "url_pattern": "/orders/{id}", "host": ["http://order-service:8082"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/orders/{id}",
+          "host": [
+            "http://order-service:8082"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/payments",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/payments", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/payments",
+          "host": [
+            "http://payment-service:8083"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/payments",
       "method": "POST",
       "backend": [
-        { "url_pattern": "/payments", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/payments",
+          "host": [
+            "http://payment-service:8083"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/payments/{id}",
       "method": "GET",
       "backend": [
-        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/payments/{id}",
+          "host": [
+            "http://payment-service:8083"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/payments/{id}",
       "method": "PUT",
       "backend": [
-        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/payments/{id}",
+          "host": [
+            "http://payment-service:8083"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     },
     {
       "endpoint": "/payments/{id}",
       "method": "DELETE",
       "backend": [
-        { "url_pattern": "/payments/{id}", "host": ["http://payment-service:8083"], "headers_to_pass": ["Authorization"] }
-      ]
+        {
+          "url_pattern": "/payments/{id}",
+          "host": [
+            "http://payment-service:8083"
+          ],
+          "headers_to_pass": [
+            "Authorization"
+          ]
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "key": "your_jwt_secret",
+          "disable_jwk_security": true
+        }
+      }
     }
   ],
   "extra_config": {
     "github.com/devopsfaith/krakend-jwt": {
-      "keys": ["your_jwt_secret"]
+      "keys": [
+        "your_jwt_secret"
+      ]
     },
     "security/cors": {
-      "allow_origins": ["*"],
-      "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      "allow_headers": ["Authorization", "Content-Type", "Origin", "Accept"],
-      "expose_headers": ["Content-Length"],
+      "allow_origins": [
+        "*"
+      ],
+      "allow_methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "OPTIONS"
+      ],
+      "allow_headers": [
+        "Authorization",
+        "Content-Type",
+        "Origin",
+        "Accept"
+      ],
+      "expose_headers": [
+        "Content-Length"
+      ],
       "max_age": "12h",
-      "allow_credentials": false
+      "allow_credentials": true
     },
     "router": {
       "auto_options": true
@@ -183,4 +504,4 @@
       "capacity": 200
     }
   }
-} 
+}

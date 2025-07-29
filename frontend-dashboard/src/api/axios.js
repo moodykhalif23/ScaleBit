@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use KrakenD gateway as the API base URL
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -15,6 +15,19 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Add response interceptor to handle 401 errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token is invalid or expired, remove it and redirect to login
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
 function parseJwt(token) {
   try {

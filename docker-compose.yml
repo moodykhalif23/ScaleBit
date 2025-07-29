@@ -71,7 +71,7 @@ services:
   krakend:
     image: krakend:latest
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./deployments/aws/krakend.json:/etc/krakend/krakend.json
     depends_on:
@@ -79,6 +79,17 @@ services:
       - product-service
       - order-service
       - payment-service
+
+  frontend:
+    build:
+      context: ./frontend-dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - krakend
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:8080
 
 volumes:
   postgres_data:
