@@ -28,15 +28,12 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-// User model
 type User struct {
 	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	Role  string `json:"role"`
 }
-
-// Add Register and Login request structs
 
 type RegisterRequest struct {
 	Name     string `json:"name"`
@@ -51,7 +48,6 @@ type LoginRequest struct {
 }
 
 func main() {
-	// Initialize tracing
 	tp := initTracer()
 	defer tp.Shutdown(context.Background())
 
@@ -63,7 +59,6 @@ func main() {
 	meter := otel.GetMeterProvider().Meter("user-service")
 	telemetry.InitMetrics(meter)
 
-	// Create a new router for public routes (no JWT required)
 	publicRouter := mux.NewRouter()
 
 	// Health endpoint
@@ -80,13 +75,9 @@ func main() {
 	publicRouter.HandleFunc("/register", registerHandler(db)).Methods("POST", "OPTIONS")
 	publicRouter.HandleFunc("/login", loginHandler(db)).Methods("POST", "OPTIONS")
 
-	// Create a subrouter for protected routes
 	protectedRouter := publicRouter.PathPrefix("/").Subrouter()
-
-	// Apply JWT middleware to protected routes only
 	protectedRouter.Use(security.JWTValidationMiddleware)
 
-	// User CRUD endpoints (protected)
 	userRouter := protectedRouter.PathPrefix("/users").Subrouter()
 	userRouter.HandleFunc("", getUsers(db)).Methods("GET")
 	userRouter.HandleFunc("", createUser(db)).Methods("POST")
@@ -94,7 +85,7 @@ func main() {
 	userRouter.HandleFunc("/{id:[0-9]+}", updateUser(db)).Methods("PUT")
 	userRouter.HandleFunc("/{id:[0-9]+}", deleteUser(db)).Methods("DELETE")
 
-	// Apply CORS middleware to all routes
+	// CORS middleware to all routes
 	handler := telemetry.Middleware(publicRouter)
 
 	srv := &http.Server{
@@ -141,7 +132,6 @@ func setupDB() *sql.DB {
 	db.SetMaxIdleConns(25)
 	db.SetConnMaxLifetime(5 * time.Minute)
 
-	// Verify the connection
 	err = db.Ping()
 	if err != nil {
 		log.Fatalf("Failed to ping database: %v", err)

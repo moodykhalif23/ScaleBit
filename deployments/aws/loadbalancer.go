@@ -32,7 +32,6 @@ func makeProxyHandler(backends []string) http.HandlerFunc {
 		proxies[i] = httputil.NewSingleHostReverseProxy(u)
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		// For now, just use the first backend (Kubernetes service is a load balancer itself)
 		proxies[0].ServeHTTP(w, r)
 	}
 }
