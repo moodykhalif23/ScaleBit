@@ -41,21 +41,26 @@ func main() {
 	meter := otel.GetMeterProvider().Meter("payment-service")
 	telemetry.InitMetrics(meter)
 
-	r := mux.NewRouter()
-	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	// Create public router for health and metrics endpoints
+	publicRouter := mux.NewRouter()
+	publicRouter.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 	}).Methods("GET")
-	r.Handle("/metrics", promhttp.Handler())
+	publicRouter.Handle("/metrics", promhttp.Handler())
 
-	paymentRouter := r.PathPrefix("/payments").Subrouter()
+	// Create protected router for payment endpoints
+	protectedRouter := publicRouter.PathPrefix("/").Subrouter()
+	protectedRouter.Use(security.JWTValidationMiddleware)
+
+	paymentRouter := protectedRouter.PathPrefix("/payments").Subrouter()
 	paymentRouter.HandleFunc("", getPayments(db)).Methods("GET")
 	paymentRouter.HandleFunc("", createPayment(db)).Methods("POST")
 	paymentRouter.HandleFunc("/{id:[0-9]+}", getPayment(db)).Methods("GET")
 	paymentRouter.HandleFunc("/{id:[0-9]+}", updatePayment(db)).Methods("PUT")
 	paymentRouter.HandleFunc("/{id:[0-9]+}", deletePayment(db)).Methods("DELETE")
 
-	handler := telemetry.Middleware(security.JWTValidationMiddleware(r))
+	handler := telemetry.Middleware(publicRouter)
 
 	srv := &http.Server{
 		Addr:    ":8083",

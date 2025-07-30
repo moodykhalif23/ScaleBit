@@ -40,21 +40,26 @@ func main() {
 	meter := otel.GetMeterProvider().Meter("product-service")
 	telemetry.InitMetrics(meter)
 
-	r := mux.NewRouter()
-	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	// Create public router for health and metrics endpoints
+	publicRouter := mux.NewRouter()
+	publicRouter.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 	}).Methods("GET")
-	r.Handle("/metrics", promhttp.Handler())
+	publicRouter.Handle("/metrics", promhttp.Handler())
 
-	productRouter := r.PathPrefix("/products").Subrouter()
+	// Create protected router for product endpoints
+	protectedRouter := publicRouter.PathPrefix("/").Subrouter()
+	protectedRouter.Use(security.JWTValidationMiddleware)
+
+	productRouter := protectedRouter.PathPrefix("/products").Subrouter()
 	productRouter.HandleFunc("", getProducts(db)).Methods("GET")
 	productRouter.HandleFunc("", createProduct(db)).Methods("POST")
 	productRouter.HandleFunc("/{id:[0-9]+}", getProduct(db)).Methods("GET")
 	productRouter.HandleFunc("/{id:[0-9]+}", updateProduct(db)).Methods("PUT")
 	productRouter.HandleFunc("/{id:[0-9]+}", deleteProduct(db)).Methods("DELETE")
 
-	handler := telemetry.Middleware(security.JWTValidationMiddleware(r))
+	handler := telemetry.Middleware(publicRouter)
 
 	srv := &http.Server{
 		Addr:    ":8081",
