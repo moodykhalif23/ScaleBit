@@ -69,16 +69,26 @@ services:
       - "8083:8083"
 
   krakend:
-    image: krakend:latest
+    image: devopsfaith/krakend:2.4
     ports:
-      - "8080:80"
+      - "8000:80"
     volumes:
       - ./deployments/aws/krakend.json:/etc/krakend/krakend.json
     depends_on:
-      - user-service
-      - product-service
-      - order-service
-      - payment-service
+      user-service:
+        condition: service_started
+      product-service:
+        condition: service_started
+      order-service:
+        condition: service_started
+      payment-service:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "sh", "-c", "nc -z localhost 80 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   frontend:
     build:
@@ -87,9 +97,10 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - krakend
+      krakend:
+        condition: service_healthy
     environment:
-      - REACT_APP_API_BASE_URL=http://localhost:8080
+      - REACT_APP_API_BASE_URL=http://localhost:8000
 
 volumes:
   postgres_data:

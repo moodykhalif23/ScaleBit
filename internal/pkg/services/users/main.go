@@ -86,7 +86,7 @@ func main() {
 	userRouter.HandleFunc("/{id:[0-9]+}", deleteUser(db)).Methods("DELETE")
 
 	// CORS middleware to all routes
-	handler := telemetry.Middleware(publicRouter)
+	handler := telemetry.Middleware(corsMiddleware(publicRouter))
 
 	srv := &http.Server{
 		Addr:    ":8080",
@@ -140,6 +140,21 @@ func setupDB() *sql.DB {
 	return db
 }
 
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 // CRUD Handlers
 func getUsers(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -183,12 +198,12 @@ func createUser(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 			return
 		}
-		result, err := db.Exec("INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4)", req.Name, req.Email, string(hash), role)
+		var id int
+		err = db.QueryRow("INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id", req.Name, req.Email, string(hash), role).Scan(&id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		id, _ := result.LastInsertId()
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "name": req.Name, "email": req.Email, "role": role})
 	}
@@ -264,12 +279,12 @@ func registerHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 			return
 		}
-		result, err := db.Exec("INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4)", req.Name, req.Email, string(hash), role)
+		var id int
+		err = db.QueryRow("INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id", req.Name, req.Email, string(hash), role).Scan(&id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		id, _ := result.LastInsertId()
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "name": req.Name, "email": req.Email, "role": role})
 	}

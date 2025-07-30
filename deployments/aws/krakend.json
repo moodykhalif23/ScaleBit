@@ -120,7 +120,12 @@
           "url_pattern": "/register",
           "host": [
             "http://user-service:8080"
-          ]
+          ],
+          "extra_config": {
+            "backend/http": {
+              "return_error_code": true
+            }
+          }
         }
       ]
     },
@@ -132,7 +137,12 @@
           "url_pattern": "/login",
           "host": [
             "http://user-service:8080"
-          ]
+          ],
+          "extra_config": {
+            "backend/http": {
+              "return_error_code": true
+            }
+          }
         }
       ]
     },
@@ -497,7 +507,8 @@
       "allow_credentials": true
     },
     "router": {
-      "auto_options": true
+      "auto_options": true,
+      "return_error_msg": true
     },
     "github.com/devopsfaith/krakend-ratelimit/juju/router": {
       "max_rate": 100,
