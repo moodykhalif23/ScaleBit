@@ -335,6 +335,8 @@ func loginHandler(db *sql.DB) http.HandlerFunc {
 			"exp":   time.Now().Add(24 * time.Hour).Unix(),
 		}
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims(claims))
+		// Set the kid in the header for KrakenD validation
+		token.Header["kid"] = "scalebit-key-1"
 		tokenString, err := token.SignedString([]byte(jwtSecret))
 		if err != nil {
 			http.Error(w, "Failed to sign token", http.StatusInternalServerError)

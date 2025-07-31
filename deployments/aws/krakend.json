@@ -19,7 +19,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -42,7 +42,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -65,7 +65,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -88,7 +88,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -111,7 +111,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -168,7 +168,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -191,7 +191,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -214,7 +214,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -237,7 +237,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -260,7 +260,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -283,7 +283,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -306,7 +306,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -329,7 +329,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -352,7 +352,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -375,7 +375,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -398,7 +398,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -421,7 +421,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -444,7 +444,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -467,7 +467,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -490,7 +490,7 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
           "roles_key": "role"
         }
@@ -498,11 +498,6 @@
     }
   ],
   "extra_config": {
-    "github.com/devopsfaith/krakend-jwt": {
-      "keys": [
-        "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A="
-      ]
-    },
     "security/cors": {
       "allow_origins": [
         "*"

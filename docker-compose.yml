@@ -74,6 +74,7 @@ services:
       - "8000:80"
     volumes:
       - ./deployments/aws/krakend.json:/etc/krakend/krakend.json
+      - ./deployments/aws/symmetric.jwk:/etc/krakend/symmetric.jwk
     depends_on:
       user-service:
         condition: service_started
