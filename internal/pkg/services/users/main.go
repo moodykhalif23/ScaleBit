@@ -327,6 +327,7 @@ func loginHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "JWT secret not set", http.StatusInternalServerError)
 			return
 		}
+		log.Printf("Using JWT secret: %s", jwtSecret)
 		claims := map[string]interface{}{
 			"id":    id,
 			"name":  name,

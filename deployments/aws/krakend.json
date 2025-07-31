@@ -21,7 +21,8 @@
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
           "disable_jwk_security": true,
-          "roles_key": "role"
+          "roles_key": "role",
+          "operation_debug": true
         }
       }
     },
