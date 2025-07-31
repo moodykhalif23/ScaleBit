@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use KrakenD gateway as the API base URL
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -11,7 +11,22 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+    // Validate token before sending
+    try {
+      const payload = parseJwt(token);
+      const currentTime = Date.now() / 1000;
+
+      if (payload && payload.exp && payload.exp > currentTime) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+        console.log('Adding valid token to request:', config.url);
+      } else {
+        console.log('Token expired, removing from localStorage');
+        localStorage.removeItem('token');
+      }
+    } catch (error) {
+      console.log('Invalid token format, removing from localStorage');
+      localStorage.removeItem('token');
+    }
   }
   return config;
 });
@@ -21,9 +36,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token is invalid or expired, remove it and redirect to login
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      // Only redirect if we're not already on the login page
+      if (!window.location.pathname.includes('/login')) {
+        // Token is invalid or expired, remove it and redirect to login
+        localStorage.removeItem('token');
+        console.log('Authentication failed, redirecting to login');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

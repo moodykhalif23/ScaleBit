@@ -20,12 +20,14 @@ export default function Dashboard() {
   const fetchStats = async () => {
     setLoading(true);
     try {
+      console.log('Fetching dashboard stats...');
       const [users, products, orders, payments] = await Promise.all([
         api.get('/users'),
         api.get('/products'),
         api.get('/orders'),
         api.get('/payments'),
       ]);
+      console.log('Dashboard stats fetched successfully');
       setStats({
         users: users.data.length,
         products: products.data.length,
@@ -33,7 +35,8 @@ export default function Dashboard() {
         payments: payments.data.length,
       });
     } catch (e) {
-      // handle error
+      console.error('Error fetching dashboard stats:', e);
+      // Don't set stats on error, keep previous values or defaults
     }
     setLoading(false);
   };

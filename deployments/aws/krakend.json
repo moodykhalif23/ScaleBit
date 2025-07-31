@@ -3,7 +3,7 @@
   "port": 80,
   "endpoints": [
     {
-      "endpoint": "/users",
+      "endpoint": "/users",       
       "method": "GET",
       "backend": [
         {
@@ -19,8 +19,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -41,8 +42,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -63,8 +65,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -85,8 +88,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -107,8 +111,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -163,8 +168,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -185,8 +191,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -207,8 +214,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -229,8 +237,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -251,8 +260,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -273,8 +283,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -295,8 +306,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -317,8 +329,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -339,8 +352,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -361,8 +375,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -383,8 +398,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -405,8 +421,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -427,8 +444,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -449,8 +467,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     },
@@ -471,8 +490,9 @@
       "extra_config": {
         "auth/validator": {
           "alg": "HS256",
-          "key": "your_jwt_secret",
-          "disable_jwk_security": true
+          "key": "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A=",
+          "disable_jwk_security": true,
+          "roles_key": "role"
         }
       }
     }
@@ -480,7 +500,7 @@
   "extra_config": {
     "github.com/devopsfaith/krakend-jwt": {
       "keys": [
-        "your_jwt_secret"
+        "BQ9PNtaBZcytjxBGF6mVwp94N+rbJVuVp/sqm/GMT2A="
       ]
     },
     "security/cors": {
