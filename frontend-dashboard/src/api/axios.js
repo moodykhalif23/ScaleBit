@@ -19,14 +19,19 @@ api.interceptors.request.use((config) => {
       if (payload && payload.exp && payload.exp > currentTime) {
         config.headers['Authorization'] = `Bearer ${token}`;
         console.log('Adding valid token to request:', config.url);
+        console.log('Token payload:', payload);
+        console.log('Token expires at:', new Date(payload.exp * 1000));
       } else {
         console.log('Token expired, removing from localStorage');
+        console.log('Current time:', currentTime, 'Token exp:', payload?.exp);
         localStorage.removeItem('token');
       }
     } catch (error) {
-      console.log('Invalid token format, removing from localStorage');
+      console.log('Invalid token format, removing from localStorage:', error);
       localStorage.removeItem('token');
     }
+  } else {
+    console.log('No token found in localStorage for request:', config.url);
   }
   return config;
 });
@@ -35,7 +40,19 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log('API Error:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      url: error.config?.url,
+      method: error.config?.method
+    });
+    
     if (error.response?.status === 401) {
+      console.log('401 Unauthorized error detected');
+      console.log('Current path:', window.location.pathname);
+      console.log('Token in localStorage:', localStorage.getItem('token') ? 'Present' : 'Not present');
+      
       // Only redirect if we're not already on the login page
       if (!window.location.pathname.includes('/login')) {
         // Token is invalid or expired, remove it and redirect to login

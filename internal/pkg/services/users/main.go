@@ -74,6 +74,7 @@ func main() {
 	// Register public auth routes
 	publicRouter.HandleFunc("/register", registerHandler(db)).Methods("POST", "OPTIONS")
 	publicRouter.HandleFunc("/login", loginHandler(db)).Methods("POST", "OPTIONS")
+	publicRouter.HandleFunc("/debug-jwt", debugJWTHandler()).Methods("GET", "OPTIONS")
 
 	protectedRouter := publicRouter.PathPrefix("/").Subrouter()
 	protectedRouter.Use(security.JWTValidationMiddleware)
@@ -328,21 +329,57 @@ func loginHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		log.Printf("Using JWT secret: %s", jwtSecret)
+		now := time.Now()
 		claims := map[string]interface{}{
 			"id":    id,
 			"name":  name,
 			"email": email,
 			"role":  role,
-			"exp":   time.Now().Add(24 * time.Hour).Unix(),
+			"iat":   now.Unix(),
+			"exp":   now.Add(24 * time.Hour).Unix(),
+			"iss":   "scalebit-platform",
+			"aud":   "scalebit-api",
 		}
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims(claims))
 		// Set the kid in the header for KrakenD validation
 		token.Header["kid"] = "scalebit-key-1"
+		log.Printf("Generated JWT claims: %+v", claims)
 		tokenString, err := token.SignedString([]byte(jwtSecret))
 		if err != nil {
 			http.Error(w, "Failed to sign token", http.StatusInternalServerError)
 			return
 		}
 		json.NewEncoder(w).Encode(map[string]string{"token": tokenString, "role": role})
+	}
+}
+
+// debugJWTHandler returns the JWT claims from the Authorization header for debugging purposes.
+func debugJWTHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" {
+			http.Error(w, "Authorization header missing", http.StatusBadRequest)
+			return
+		}
+		var tokenString string
+		if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
+			tokenString = authHeader[7:]
+		} else {
+			tokenString = authHeader
+		}
+		jwtSecret := os.Getenv("JWT_SECRET")
+		if jwtSecret == "" {
+			http.Error(w, "JWT secret not set", http.StatusInternalServerError)
+			return
+		}
+		token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			return []byte(jwtSecret), nil
+		})
+		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(claims)
+			return
+		}
+		http.Error(w, "Invalid or expired token", http.StatusUnauthorized)
 	}
 }

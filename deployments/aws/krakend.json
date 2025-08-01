@@ -20,9 +20,14 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role",
-          "operation_debug": true
+          "operation_debug": true,
+          "propagate_claims": [
+            ["id", "x-user-id"],
+            ["role", "x-user-role"],
+            ["email", "x-user-email"]
+          ]
         }
       }
     },
@@ -44,7 +49,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -67,7 +72,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -90,7 +95,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -113,7 +118,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -170,7 +175,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -193,7 +198,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -216,7 +221,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -239,7 +244,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -262,7 +267,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -285,7 +290,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -308,7 +313,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -331,7 +336,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -354,7 +359,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -377,7 +382,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -400,7 +405,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -423,7 +428,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -446,7 +451,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -469,7 +474,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
@@ -492,7 +497,7 @@
         "auth/validator": {
           "alg": "HS256",
           "jwk_local_path": "/etc/krakend/symmetric.jwk",
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "roles_key": "role"
         }
       }
