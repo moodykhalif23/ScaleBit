@@ -49,11 +49,7 @@ func main() {
 	}).Methods("GET")
 	publicRouter.Handle("/metrics", promhttp.Handler())
 
-	// Create protected router for order endpoints
-	protectedRouter := publicRouter.PathPrefix("/").Subrouter()
-	protectedRouter.Use(security.JWTValidationMiddleware)
-
-	orderRouter := protectedRouter.PathPrefix("/orders").Subrouter()
+	orderRouter := publicRouter.PathPrefix("/orders").Subrouter()
 	orderRouter.HandleFunc("", getOrders(db)).Methods("GET")
 	orderRouter.HandleFunc("", createOrder(db)).Methods("POST")
 	orderRouter.HandleFunc("/{id:[0-9]+}", getOrder(db)).Methods("GET")

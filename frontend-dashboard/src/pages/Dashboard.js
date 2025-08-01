@@ -36,7 +36,8 @@ export default function Dashboard() {
       });
     } catch (e) {
       console.error('Error fetching dashboard stats:', e);
-      // Don't set stats on error, keep previous values or defaults
+      // Set default values on error
+      setStats({ users: 0, products: 0, orders: 0, payments: 0 });
     }
     setLoading(false);
   };
