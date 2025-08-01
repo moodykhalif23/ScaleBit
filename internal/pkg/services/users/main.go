@@ -76,10 +76,7 @@ func main() {
 	publicRouter.HandleFunc("/login", loginHandler(db)).Methods("POST", "OPTIONS")
 	publicRouter.HandleFunc("/debug-jwt", debugJWTHandler()).Methods("GET", "OPTIONS")
 
-	protectedRouter := publicRouter.PathPrefix("/").Subrouter()
-	protectedRouter.Use(security.JWTValidationMiddleware)
-
-	userRouter := protectedRouter.PathPrefix("/users").Subrouter()
+	userRouter := publicRouter.PathPrefix("/users").Subrouter()
 	userRouter.HandleFunc("", getUsers(db)).Methods("GET")
 	userRouter.HandleFunc("", createUser(db)).Methods("POST")
 	userRouter.HandleFunc("/{id:[0-9]+}", getUser(db)).Methods("GET")

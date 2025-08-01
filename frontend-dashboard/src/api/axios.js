@@ -53,8 +53,9 @@ api.interceptors.response.use(
       console.log('Current path:', window.location.pathname);
       console.log('Token in localStorage:', localStorage.getItem('token') ? 'Present' : 'Not present');
       
-      // Only redirect if we're not already on the login page
-      if (!window.location.pathname.includes('/login')) {
+      // Only redirect if we're not already on the login page and not on a public route
+      if (!window.location.pathname.includes('/login') && 
+          !window.location.pathname.includes('/register')) {
         // Token is invalid or expired, remove it and redirect to login
         localStorage.removeItem('token');
         console.log('Authentication failed, redirecting to login');
