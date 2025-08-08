@@ -23,6 +23,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/gorilla/mux"
+	"github.com/moodykhalif23/scalebit/internal/pkg/auth"
 	"github.com/moodykhalif23/scalebit/internal/pkg/telemetry"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -83,7 +84,7 @@ func main() {
 	userRouter.HandleFunc("/{id:[0-9]+}", deleteUser(db)).Methods("DELETE")
 
 	// CORS middleware to all routes
-	handler := telemetry.Middleware(corsMiddleware(publicRouter))
+	handler := telemetry.Middleware(corsMiddleware(auth.JWTMiddleware(publicRouter)))
 
 	srv := &http.Server{
 		Addr:    ":8080",
