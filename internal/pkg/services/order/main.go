@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/moodykhalif23/scalebit/internal/pkg/auth"
+	"github.com/moodykhalif23/scalebit/internal/pkg/security"
 	"github.com/moodykhalif23/scalebit/internal/pkg/telemetry"
 
 	_ "github.com/lib/pq"
@@ -56,7 +56,7 @@ func main() {
 	orderRouter.HandleFunc("/{id:[0-9]+}", updateOrder(db)).Methods("PUT")
 	orderRouter.HandleFunc("/{id:[0-9]+}", deleteOrder(db)).Methods("DELETE")
 
-	handler := telemetry.Middleware(auth.JWTMiddleware(publicRouter))
+	handler := telemetry.Middleware(security.JWTValidationMiddleware(publicRouter))
 
 	srv := &http.Server{
 		Addr:    ":8082",
