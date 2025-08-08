@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/moodykhalif23/scalebit/internal/pkg/security"
 	"github.com/moodykhalif23/scalebit/internal/pkg/telemetry"
 
 	_ "github.com/lib/pq"
@@ -154,7 +153,7 @@ func getProduct(db *sql.DB) http.HandlerFunc {
 		vars := mux.Vars(r)
 		id := vars["id"]
 		var p Product
-		err := db.QueryRow("SELECT id, name, price, stock FROM products WHERE id = ?", id).Scan(&p.ID, &p.Name, &p.Price, &p.Stock)
+		err := db.QueryRow("SELECT id, name, price, stock FROM products WHERE id = $1", id).Scan(&p.ID, &p.Name, &p.Price, &p.Stock)
 		if err == sql.ErrNoRows {
 			http.Error(w, "Product not found", http.StatusNotFound)
 			return
@@ -175,7 +174,7 @@ func updateProduct(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		_, err := db.Exec("UPDATE products SET name = ?, price = ?, stock = ? WHERE id = ?", p.Name, p.Price, p.Stock, id)
+		_, err := db.Exec("UPDATE products SET name = $1, price = $2, stock = $3 WHERE id = $4", p.Name, p.Price, p.Stock, id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -189,7 +188,7 @@ func deleteProduct(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id := vars["id"]
-		_, err := db.Exec("DELETE FROM products WHERE id = ?", id)
+		_, err := db.Exec("DELETE FROM products WHERE id = $1", id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

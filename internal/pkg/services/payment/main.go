@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/moodykhalif23/scalebit/internal/pkg/security"
 	"github.com/moodykhalif23/scalebit/internal/pkg/telemetry"
 
 	_ "github.com/lib/pq"

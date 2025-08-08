@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/moodykhalif23/scalebit/internal/pkg/security"
 	"github.com/moodykhalif23/scalebit/internal/pkg/telemetry"
 
 	_ "github.com/lib/pq"
@@ -155,7 +154,7 @@ func getOrder(db *sql.DB) http.HandlerFunc {
 		vars := mux.Vars(r)
 		id := vars["id"]
 		var o Order
-		err := db.QueryRow("SELECT id, user_id, product_id, quantity, status FROM orders WHERE id = ?", id).Scan(&o.ID, &o.UserID, &o.ProductID, &o.Quantity, &o.Status)
+		err := db.QueryRow("SELECT id, user_id, product_id, quantity, status FROM orders WHERE id = $1", id).Scan(&o.ID, &o.UserID, &o.ProductID, &o.Quantity, &o.Status)
 		if err == sql.ErrNoRows {
 			http.Error(w, "Order not found", http.StatusNotFound)
 			return
@@ -176,7 +175,7 @@ func updateOrder(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		_, err := db.Exec("UPDATE orders SET user_id = ?, product_id = ?, quantity = ?, status = ? WHERE id = ?", o.UserID, o.ProductID, o.Quantity, o.Status, id)
+		_, err := db.Exec("UPDATE orders SET user_id = $1, product_id = $2, quantity = $3, status = $4 WHERE id = $5", o.UserID, o.ProductID, o.Quantity, o.Status, id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -190,7 +189,7 @@ func deleteOrder(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id := vars["id"]
-		_, err := db.Exec("DELETE FROM orders WHERE id = ?", id)
+		_, err := db.Exec("DELETE FROM orders WHERE id = $1", id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

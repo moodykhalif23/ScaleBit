@@ -23,7 +23,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/gorilla/mux"
-	"github.com/moodykhalif23/scalebit/internal/pkg/security"
 	"github.com/moodykhalif23/scalebit/internal/pkg/telemetry"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
